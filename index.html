@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-<title>Treino 2026 — 350/365</title>
+<title>Treino 2026</title>
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="theme-color" content="#0f172a" />
@@ -16,26 +16,22 @@
   .subtitle{text-align:center;font-size:13px;color:#64748b;margin-top:4px}
 
   /* Auth */
-  .auth-box{max-width:380px;margin:60px auto;background:rgba(255,255,255,0.03);border-radius:20px;padding:32px 24px;border:1px solid rgba(255,255,255,0.06)}
-  .auth-box h2{text-align:center;font-size:20px;margin-bottom:4px}
-  .auth-box p{text-align:center;font-size:13px;color:#64748b;margin-bottom:24px}
-  .auth-box input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:14px;margin-bottom:12px;outline:none}
-  .auth-box input:focus{border-color:#7c3aed}
-  .auth-box input::placeholder{color:#64748b}
-  .btn-primary{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:12px}
-  .btn-primary:disabled{opacity:0.5;cursor:not-allowed}
-  .btn-link{background:none;border:none;color:#a78bfa;font-size:13px;cursor:pointer;display:block;text-align:center;width:100%}
-  .auth-error{color:#f87171;font-size:12px;text-align:center;margin-bottom:12px}
+  .auth-box{max-width:380px;margin:80px auto;background:rgba(255,255,255,0.03);border-radius:20px;padding:40px 24px;border:1px solid rgba(255,255,255,0.06);text-align:center}
+  .auth-box p{font-size:14px;color:#94a3b8;margin:8px 0 32px}
+  .btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+  .btn-google:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+  .btn-google svg{width:20px;height:20px}
 
   /* Top bar */
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .topbar-user{font-size:12px;color:#64748b}
+  .topbar-user{font-size:12px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
   .btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.05);color:#94a3b8}
 
-  /* Goal editor */
-  .goal-edit{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border-radius:10px;padding:6px 12px;border:1px solid rgba(255,255,255,0.06)}
-  .goal-edit input{width:60px;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:14px;text-align:center;font-weight:700}
-  .goal-edit button{padding:4px 12px;border-radius:6px;border:none;background:#7c3aed;color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+  /* Goal */
+  .goal-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
+  .goal-wrap input{width:56px;padding:4px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;text-align:center;font-weight:700;outline:none}
+  .goal-wrap input:focus{border-color:#7c3aed}
+  .goal-wrap span{font-size:13px;color:#64748b}
 
   /* Cards */
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
@@ -45,211 +41,186 @@
   .card-sub{font-size:11px;color:#64748b}
 
   /* Progress */
-  .progress-box{background:rgba(255,255,255,0.03);border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.06)}
-  .progress-row{display:flex;justify-content:space-between;font-size:13px;color:#94a3b8;margin-bottom:4px}
-  .progress-row span:last-child{font-weight:700;color:#e2e8f0}
-  .bar-bg{height:10px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:10px}
-  .bar-fill{height:100%;border-radius:99px;transition:width .4s ease}
+  .pbox{background:rgba(255,255,255,0.03);border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.06)}
+  .prow{display:flex;justify-content:space-between;font-size:13px;color:#94a3b8;margin-bottom:4px}
+  .prow span:last-child{font-weight:700;color:#e2e8f0}
+  .bbg{height:10px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:10px}
+  .bfill{height:100%;border-radius:99px;transition:width .4s ease}
 
   /* Nav */
   .nav{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
   .nav button{padding:8px 20px;border-radius:99px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
-  .nav .active{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
-  .nav .inactive{background:rgba(255,255,255,0.05);color:#94a3b8}
+  .nav .on{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+  .nav .off{background:rgba(255,255,255,0.05);color:#94a3b8}
 
   /* Calendar */
-  .months-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-  .month-box{background:rgba(255,255,255,0.03);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.06)}
-  .month-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  .month-name{font-weight:700;font-size:15px}
-  .month-badge{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px}
-  .days-header{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
-  .days-header span{text-align:center;font-size:10px;color:#64748b;font-weight:600}
-  .days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-  .day-btn{width:100%;aspect-ratio:1;border-radius:50%;border:1px solid transparent;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-  .day-btn.empty{pointer-events:none}
-  .day-btn.off{background:rgba(255,255,255,0.05);color:#94a3b8}
-  .day-btn.on{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:700}
-  .day-btn.today{border:2px solid #a78bfa}
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .mbox{background:rgba(255,255,255,0.03);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.06)}
+  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .mname{font-weight:700;font-size:15px}
+  .mbadge{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px}
+  .dwh{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+  .dwh span{text-align:center;font-size:10px;color:#64748b;font-weight:600}
+  .dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .db{width:100%;aspect-ratio:1;border-radius:50%;border:1px solid transparent;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .db.e{pointer-events:none}
+  .db.o{background:rgba(255,255,255,0.05);color:#94a3b8}
+  .db.t{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:700}
+  .db.td{border:2px solid #a78bfa}
 
   /* Stats */
-  .stats-list{display:grid;gap:8px}
-  .stat-row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border-radius:12px;padding:12px 16px;border:1px solid rgba(255,255,255,0.06)}
-  .stat-row.current{border-color:rgba(167,139,250,0.3)}
-  .stat-name{width:75px;font-size:13px;font-weight:600}
-  .stat-bar-bg{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden}
-  .stat-bar-fill{height:100%;border-radius:99px;transition:width .3s}
-  .stat-pct{font-size:13px;font-weight:700;width:42px;text-align:right}
-  .stat-count{font-size:12px;color:#64748b;width:48px;text-align:right}
+  .slist{display:grid;gap:8px}
+  .sr{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border-radius:12px;padding:12px 16px;border:1px solid rgba(255,255,255,0.06)}
+  .sr.cur{border-color:rgba(167,139,250,0.3)}
+  .sn{width:75px;font-size:13px;font-weight:600}
+  .sbbg{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden}
+  .sbf{height:100%;border-radius:99px;transition:width .3s}
+  .sp{font-size:13px;font-weight:700;width:42px;text-align:right}
+  .sc{font-size:12px;color:#64748b;width:48px;text-align:right}
 
   .footer{text-align:center;font-size:11px;color:#475569;margin-top:24px}
-  .green{color:#4ade80}.yellow{color:#facc15}.red{color:#f87171}
-  .loading{text-align:center;color:#64748b;padding:60px 20px;font-size:14px}
+  .g{color:#4ade80}.y{color:#facc15}.r{color:#f87171}
+  .ld{text-align:center;color:#64748b;padding:60px 20px;font-size:14px}
 </style>
 </head>
 <body>
-<div id="root"><div class="loading">Carregando...</div></div>
+<div id="root"><div class="ld">Carregando...</div></div>
 <script>
-const SUPABASE_URL = "https://fcpdbpmqxwxxuiqlrgwm.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjcGRicG1xeHd4eHVpcWxyZ3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MDA3ODgsImV4cCI6MjA5MDQ3Njc4OH0.UjGcitC6Z7aqID7EdpfXI75xl12Z4mAyd0loFplKuDw";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SURL="https://fcpdbpmqxwxxuiqlrgwm.supabase.co";
+const SKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZjcGRicG1xeHd4eHVpcWxyZ3dtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MDA3ODgsImV4cCI6MjA5MDQ3Njc4OH0.UjGcitC6Z7aqID7EdpfXI75xl12Z4mAyd0loFplKuDw";
+const SITE="https://training-tracker-kohl.vercel.app/";
+const sb=supabase.createClient(SURL,SKEY);
 
-const YEAR = 2026;
-const MONTHS = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-const DAYS_W = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const Y=2026;
+const MN=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const DW=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
-let user = null, goal = 350, trainedDates = new Set(), view = "calendar", authMode = "login", authLoading = false, authError = "";
+let user=null,goal=350,days=new Set(),view="calendar";
 
-function daysIn(m){return new Date(YEAR,m+1,0).getDate()}
-function firstDay(m){return new Date(YEAR,m,1).getDay()}
-function dateStr(m,d){return `${YEAR}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
-function monthTrained(m){let c=0;for(let d=1;d<=daysIn(m);d++)if(trainedDates.has(dateStr(m,d)))c++;return c}
-function pctColor(p){return p>=90?"green":p>=70?"yellow":"red"}
-function pctBg(p){return p>=90?"rgba(34,197,94,0.15)":p>=70?"rgba(250,204,21,0.15)":"rgba(239,68,68,0.15)"}
-function barGrad(p){return p>=90?"linear-gradient(90deg,#22c55e,#4ade80)":p>=70?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)"}
+function dim(m){return new Date(Y,m+1,0).getDate()}
+function fdow(m){return new Date(Y,m,1).getDay()}
+function ds(m,d){return`${Y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
+function mt(m){let c=0;for(let d=1;d<=dim(m);d++)if(days.has(ds(m,d)))c++;return c}
+function pc(p){return p>=90?"g":p>=70?"y":"r"}
+function pbg(p){return p>=90?"rgba(34,197,94,0.15)":p>=70?"rgba(250,204,21,0.15)":"rgba(239,68,68,0.15)"}
+function pcl(p){return p>=90?"#4ade80":p>=70?"#facc15":"#f87171"}
+function bg(p){return p>=90?"linear-gradient(90deg,#22c55e,#4ade80)":p>=70?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)"}
+
+const GOOGLE_SVG=`<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
+
+async function loginGoogle(){
+  await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:SITE}});
+}
+
+async function logout(){await sb.auth.signOut();user=null;days=new Set();goal=350;render()}
 
 async function loadData(){
   const{data:p}=await sb.from("profiles").select("goal").eq("id",user.id).single();
-  if(p)goal=p.goal;
-  const{data:days}=await sb.from("training_days").select("date").eq("user_id",user.id);
-  trainedDates=new Set((days||[]).map(d=>d.date));
-  render();
-}
-
-async function toggleDay(m,d){
-  const ds=dateStr(m,d);
-  if(trainedDates.has(ds)){
-    trainedDates.delete(ds);
-    await sb.from("training_days").delete().eq("user_id",user.id).eq("date",ds);
-  }else{
-    trainedDates.add(ds);
-    await sb.from("training_days").insert({user_id:user.id,date:ds});
+  if(p){goal=p.goal}else{
+    await sb.from("profiles").insert({id:user.id,goal:350});
+    goal=350;
   }
+  const{data:d}=await sb.from("training_days").select("date").eq("user_id",user.id);
+  days=new Set((d||[]).map(r=>r.date));
   render();
 }
 
-async function updateGoal(v){
-  const n=parseInt(v);
-  if(isNaN(n)||n<1||n>365)return;
-  goal=n;
-  await sb.from("profiles").update({goal:n}).eq("id",user.id);
+async function toggle(m,d){
+  const k=ds(m,d);
+  if(days.has(k)){days.delete(k);await sb.from("training_days").delete().eq("user_id",user.id).eq("date",k)}
+  else{days.add(k);await sb.from("training_days").insert({user_id:user.id,date:k})}
   render();
 }
 
-async function handleAuth(){
-  authLoading=true;authError="";render();
-  const email=document.getElementById("auth-email")?.value;
-  const pass=document.getElementById("auth-pass")?.value;
-  if(!email||!pass){authError="Preencha todos os campos";authLoading=false;render();return}
-  let res;
-  if(authMode==="login") res=await sb.auth.signInWithPassword({email,password:pass});
-  else res=await sb.auth.signUp({email,password:pass});
-  if(res.error){authError=res.error.message;authLoading=false;render();return}
-  user=res.data.user;
-  authLoading=false;
-  await loadData();
-}
-
-async function logout(){await sb.auth.signOut();user=null;trainedDates=new Set();goal=350;render()}
-
-function renderAuth(){
-  return `<div class="auth-box">
-    <h1>TREINO ${YEAR}</h1>
-    <p class="subtitle" style="margin-bottom:24px">${authMode==="login"?"Entre na sua conta":"Crie sua conta"}</p>
-    ${authError?`<div class="auth-error">${authError}</div>`:""}
-    <input id="auth-email" type="email" placeholder="Seu email" />
-    <input id="auth-pass" type="password" placeholder="Sua senha" onkeydown="if(event.key==='Enter')handleAuth()" />
-    <button class="btn-primary" onclick="handleAuth()" ${authLoading?"disabled":""}>${authLoading?"Aguarde...":authMode==="login"?"Entrar":"Criar conta"}</button>
-    <button class="btn-link" onclick="authMode='${authMode==="login"?"signup":"login"}';authError='';render()">
-      ${authMode==="login"?"Não tem conta? Crie uma":"Já tem conta? Entre"}
-    </button>
-  </div>`;
+async function setGoal(v){
+  const n=parseInt(v);if(isNaN(n)||n<1||n>365)return;
+  goal=n;await sb.from("profiles").update({goal:n}).eq("id",user.id);render();
 }
 
 function render(){
-  if(!user){document.getElementById("root").innerHTML=renderAuth();return}
+  const R=document.getElementById("root");
+  if(!user){
+    R.innerHTML=`<div class="auth-box">
+      <h1>TREINO ${Y}</h1>
+      <p>Acompanhe seus treinos durante o ano</p>
+      <button class="btn-google" onclick="loginGoogle()">${GOOGLE_SVG} Entrar com Google</button>
+    </div>`;
+    return;
+  }
 
-  const now=new Date(),dayOfYear=Math.floor((now-new Date(YEAR,0,0))/864e5);
-  const total=trainedDates.size;
-  const expected=Math.round((goal/365)*dayOfYear);
-  const diff=total-expected;
-  const approx=dayOfYear>0?Math.round((total/dayOfYear)*100):0;
+  const now=new Date(),doy=Math.floor((now-new Date(Y,0,0))/864e5);
+  const tot=days.size,exp=Math.round((goal/365)*doy),diff=tot-exp;
+  const apx=doy>0?Math.round((tot/doy)*100):0;
+  const name=user.user_metadata?.full_name||user.email;
 
-  let h=`<div class="topbar">
-    <span class="topbar-user">${user.email}</span>
-    <button class="btn-sm" onclick="logout()">Sair</button>
-  </div>`;
-
-  h+=`<h1>TREINO ${YEAR}</h1>`;
-  h+=`<p class="subtitle">Meta: <span class="goal-edit">
-    <input id="goal-input" type="number" min="1" max="365" value="${goal}" onchange="updateGoal(this.value)" />
-    <span style="font-size:13px;color:#64748b">de 365 dias</span>
-  </span></p>`;
+  let h=`<div class="topbar"><span class="topbar-user">${name}</span><button class="btn-sm" onclick="logout()">Sair</button></div>`;
+  h+=`<h1>TREINO ${Y}</h1>`;
+  h+=`<div class="goal-wrap"><span>Meta:</span><input type="number" min="1" max="365" value="${goal}" onchange="setGoal(this.value)" /><span>de 365 dias</span></div>`;
 
   const cards=[
-    {l:"Dias treinados",v:total,s:`de ${goal}`,c:"#a78bfa"},
-    {l:"Dias restantes",v:365-dayOfYear,s:"do ano",c:"#38bdf8"},
+    {l:"Dias treinados",v:tot,s:`de ${goal}`,c:"#a78bfa"},
+    {l:"Dias restantes",v:Math.max(0,365-doy),s:"do ano",c:"#38bdf8"},
     {l:"Ritmo",v:(diff>=0?"+":"")+diff,s:diff>=0?"adiantado":"atrasado",c:diff>=0?"#4ade80":"#f87171"},
-    {l:"Aproveitamento",v:approx+"%",s:"do ano até agora",c:"#facc15"}
+    {l:"Aproveitamento",v:apx+"%",s:"do ano até agora",c:"#facc15"}
   ];
   h+=`<div class="cards">${cards.map(c=>`<div class="card"><div class="card-label">${c.l}</div><div class="card-value" style="color:${c.c}">${c.v}</div><div class="card-sub">${c.s}</div></div>`).join("")}</div>`;
 
-  const p1=Math.min(100,Math.round((total/goal)*100)),p2=Math.min(100,Math.round((dayOfYear/365)*100));
-  h+=`<div class="progress-box">
-    <div class="progress-row"><span>Progresso da Meta</span><span>${total}/${goal}</span></div>
-    <div class="bar-bg"><div class="bar-fill" style="width:${p1}%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
-    <div class="progress-row"><span>Progresso do Ano</span><span>${dayOfYear}/365</span></div>
-    <div class="bar-bg"><div class="bar-fill" style="width:${p2}%;background:linear-gradient(90deg,#1e40af,#38bdf8)"></div></div>
+  const p1=Math.min(100,Math.round((tot/goal)*100)),p2=Math.min(100,Math.round((doy/365)*100));
+  h+=`<div class="pbox">
+    <div class="prow"><span>Progresso da Meta</span><span>${tot}/${goal}</span></div>
+    <div class="bbg"><div class="bfill" style="width:${p1}%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+    <div class="prow"><span>Progresso do Ano</span><span>${doy}/365</span></div>
+    <div class="bbg"><div class="bfill" style="width:${p2}%;background:linear-gradient(90deg,#1e40af,#38bdf8)"></div></div>
   </div>`;
 
   h+=`<div class="nav">
-    <button class="${view==="calendar"?"active":"inactive"}" onclick="view='calendar';render()">Calendário</button>
-    <button class="${view==="stats"?"active":"inactive"}" onclick="view='stats';render()">Estatísticas</button>
+    <button class="${view==="calendar"?"on":"off"}" onclick="view='calendar';render()">Calendário</button>
+    <button class="${view==="stats"?"on":"off"}" onclick="view='stats';render()">Estatísticas</button>
   </div>`;
 
   if(view==="calendar"){
-    h+=`<div class="months-grid">`;
+    h+=`<div class="mgrid">`;
     for(let m=0;m<12;m++){
-      const days=daysIn(m),first=firstDay(m),trained=monthTrained(m);
-      const pct=Math.round((trained/days)*100);
-      const isCur=now.getFullYear()===YEAR&&now.getMonth()===m;
-      const td=now.getDate();
-      h+=`<div class="month-box"><div class="month-header"><span class="month-name">${MONTHS[m]}</span><span class="month-badge" style="background:${pctBg(pct)};color:${pct>=90?"#4ade80":pct>=70?"#facc15":"#f87171"}">${trained}/${days} · ${pct}%</span></div>`;
-      h+=`<div class="days-header">${DAYS_W.map(d=>`<span>${d}</span>`).join("")}</div><div class="days-grid">`;
-      for(let i=0;i<first;i++)h+=`<div class="day-btn empty"></div>`;
-      for(let d=1;d<=days;d++){
-        const on=trainedDates.has(dateStr(m,d));
-        const isToday=isCur&&d===td;
-        h+=`<button class="day-btn ${on?"on":"off"} ${isToday?"today":""}" onclick="toggleDay(${m},${d})">${d}</button>`;
+      const di=dim(m),f=fdow(m),tr=mt(m),pct=Math.round((tr/di)*100);
+      const isCur=now.getFullYear()===Y&&now.getMonth()===m,td=now.getDate();
+      h+=`<div class="mbox"><div class="mhead"><span class="mname">${MN[m]}</span><span class="mbadge" style="background:${pbg(pct)};color:${pcl(pct)}">${tr}/${di} · ${pct}%</span></div>`;
+      h+=`<div class="dwh">${DW.map(d=>`<span>${d}</span>`).join("")}</div><div class="dgrid">`;
+      for(let i=0;i<f;i++)h+=`<div class="db e"></div>`;
+      for(let d=1;d<=di;d++){
+        const on=days.has(ds(m,d)),ist=isCur&&d===td;
+        h+=`<button class="db ${on?"t":"o"} ${ist?"td":""}" onclick="toggle(${m},${d})">${d}</button>`;
       }
       h+=`</div></div>`;
     }
     h+=`</div>`;
   }else{
-    h+=`<div class="stats-list">`;
+    h+=`<div class="slist">`;
     for(let m=0;m<12;m++){
-      const days=daysIn(m),trained=monthTrained(m),pct=Math.round((trained/days)*100);
-      const isCur=now.getMonth()===m;
-      h+=`<div class="stat-row ${isCur?"current":""}">
-        <span class="stat-name">${MONTHS[m]}</span>
-        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%;background:${barGrad(pct)}"></div></div>
-        <span class="stat-pct ${pctColor(pct)}">${pct}%</span>
-        <span class="stat-count">${trained}/${days}</span>
+      const di=dim(m),tr=mt(m),pct=Math.round((tr/di)*100),isCur=now.getMonth()===m;
+      h+=`<div class="sr ${isCur?"cur":""}">
+        <span class="sn">${MN[m]}</span>
+        <div class="sbbg"><div class="sbf" style="width:${pct}%;background:${bg(pct)}"></div></div>
+        <span class="sp ${pc(pct)}">${pct}%</span>
+        <span class="sc">${tr}/${di}</span>
       </div>`;
     }
     h+=`</div>`;
   }
 
-  h+=`<p class="footer">Toque no dia para marcar/desmarcar · Dados sincronizados na nuvem</p>`;
-  document.getElementById("root").innerHTML=h;
+  h+=`<p class="footer">Toque no dia para marcar/desmarcar · Sincronizado na nuvem</p>`;
+  R.innerHTML=h;
 }
 
-// Init
+// Init — handle OAuth redirect and session
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
-  if(session)user=session.user;
-  if(user)await loadData();
+  if(session){user=session.user;await loadData()}
   else render();
+
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(event==="SIGNED_IN"&&session){user=session.user;await loadData()}
+    else if(event==="SIGNED_OUT"){user=null;days=new Set();goal=350;render()}
+  });
 })();
 </script>
 </body>
