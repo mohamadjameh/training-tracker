@@ -13,47 +13,39 @@
   body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100dvh}
   #root{max-width:900px;margin:0 auto;padding:20px 16px 40px}
   h1{font-size:26px;font-weight:800;text-align:center;background:linear-gradient(135deg,#7c3aed,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .subtitle{text-align:center;font-size:13px;color:#64748b;margin-top:4px}
 
-  /* Auth */
   .auth-box{max-width:380px;margin:80px auto;background:rgba(255,255,255,0.03);border-radius:20px;padding:40px 24px;border:1px solid rgba(255,255,255,0.06);text-align:center}
   .auth-box p{font-size:14px;color:#94a3b8;margin:8px 0 32px}
   .btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
-  .btn-google:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2)}
+  .btn-google:hover{background:rgba(255,255,255,0.1)}
   .btn-google svg{width:20px;height:20px}
 
-  /* Top bar */
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .topbar-user{font-size:12px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
   .btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.05);color:#94a3b8}
-
-  /* Goal */
+  .subtitle{text-align:center;font-size:13px;color:#64748b;margin-top:4px}
   .goal-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
   .goal-wrap input{width:56px;padding:4px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;text-align:center;font-weight:700;outline:none}
   .goal-wrap input:focus{border-color:#7c3aed}
   .goal-wrap span{font-size:13px;color:#64748b}
 
-  /* Cards */
   .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
   .card{background:rgba(255,255,255,0.03);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.06);text-align:center}
   .card-label{font-size:10px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
   .card-value{font-size:26px;font-weight:800;margin:4px 0 2px}
   .card-sub{font-size:11px;color:#64748b}
 
-  /* Progress */
   .pbox{background:rgba(255,255,255,0.03);border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.06)}
   .prow{display:flex;justify-content:space-between;font-size:13px;color:#94a3b8;margin-bottom:4px}
   .prow span:last-child{font-weight:700;color:#e2e8f0}
   .bbg{height:10px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:10px}
   .bfill{height:100%;border-radius:99px;transition:width .4s ease}
 
-  /* Nav */
-  .nav{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
+  .nav{display:flex;gap:8px;justify-content:center;margin-bottom:18px;flex-wrap:wrap}
   .nav button{padding:8px 20px;border-radius:99px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
   .nav .on{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
   .nav .off{background:rgba(255,255,255,0.05);color:#94a3b8}
 
-  /* Calendar */
   .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
   .mbox{background:rgba(255,255,255,0.03);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.06)}
   .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
@@ -62,11 +54,31 @@
   .dwh{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
   .dwh span{text-align:center;font-size:10px;color:#64748b;font-weight:600}
   .dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-  .db{width:100%;aspect-ratio:1;border-radius:50%;border:1px solid transparent;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
-  .db.e{pointer-events:none}
-  .db.o{background:rgba(255,255,255,0.05);color:#94a3b8}
-  .db.t{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:700}
-  .db.td{border:2px solid #a78bfa}
+
+  .dcell{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
+  .dnum{width:30px;height:30px;border-radius:50%;border:1px solid transparent;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+  .dnum.empty{pointer-events:none}
+  .dnum.notr{background:rgba(255,255,255,0.05);color:#94a3b8}
+  .dnum.tr{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:700}
+  .dnum.today{border:2px solid #a78bfa}
+  .dots{display:flex;gap:2px;height:6px;align-items:center;justify-content:center}
+  .dot{width:5px;height:5px;border-radius:50%}
+
+  /* Modal */
+  .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+  .modal{background:#1e293b;border-radius:20px;padding:24px;max-width:360px;width:100%;border:1px solid rgba(255,255,255,0.1);max-height:80vh;overflow-y:auto}
+  .modal h3{font-size:18px;font-weight:700;margin-bottom:4px}
+  .modal-date{font-size:13px;color:#64748b;margin-bottom:16px}
+  .modal-cat{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+  .modal-types{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .type-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);cursor:pointer;transition:all .15s;font-size:13px;color:#94a3b8}
+  .type-btn.sel{border-color:var(--tc);background:rgba(255,255,255,0.05);color:#e2e8f0;font-weight:600}
+  .type-btn:hover{background:rgba(255,255,255,0.05)}
+  .type-icon{font-size:18px}
+  .modal-actions{display:flex;gap:8px;margin-top:20px}
+  .modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer}
+  .btn-save{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+  .btn-cancel{background:rgba(255,255,255,0.05);color:#94a3b8}
 
   /* Stats */
   .slist{display:grid;gap:8px}
@@ -78,9 +90,21 @@
   .sp{font-size:13px;font-weight:700;width:42px;text-align:right}
   .sc{font-size:12px;color:#64748b;width:48px;text-align:right}
 
+  /* Type stats */
+  .type-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+  .ts-card{background:rgba(255,255,255,0.03);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px}
+  .ts-icon{font-size:24px}
+  .ts-info{flex:1}
+  .ts-name{font-size:12px;color:#94a3b8}
+  .ts-val{font-size:20px;font-weight:800}
+
   .footer{text-align:center;font-size:11px;color:#475569;margin-top:24px}
   .g{color:#4ade80}.y{color:#facc15}.r{color:#f87171}
   .ld{text-align:center;color:#64748b;padding:60px 20px;font-size:14px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px}
+  .legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:#94a3b8}
+  .legend-dot{width:8px;height:8px;border-radius:50%}
 </style>
 </head>
 <body>
@@ -95,61 +119,128 @@ const Y=2026;
 const MN=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DW=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
-let user=null,goal=350,days=new Set(),view="calendar";
+const TYPES={
+  musculacao:{name:"Musculação",icon:"🏋️",color:"#a78bfa",cat:"Força"},
+  calistenia:{name:"Calistenia",icon:"💪",color:"#c084fc",cat:"Força"},
+  crossfit:{name:"CrossFit / Funcional",icon:"🔥",color:"#f97316",cat:"Força"},
+  corrida:{name:"Corrida",icon:"🏃",color:"#22d3ee",cat:"Cardio"},
+  caminhada:{name:"Caminhada",icon:"🚶",color:"#67e8f9",cat:"Cardio"},
+  bike:{name:"Bike / Ciclismo",icon:"🚴",color:"#34d399",cat:"Cardio"},
+  natacao:{name:"Natação",icon:"🏊",color:"#38bdf8",cat:"Cardio"},
+  remo:{name:"Remo",icon:"🚣",color:"#2dd4bf",cat:"Cardio"},
+  hiit:{name:"HIIT",icon:"⚡",color:"#fbbf24",cat:"Cardio"},
+  pular_corda:{name:"Pular Corda",icon:"〰️",color:"#a3e635",cat:"Cardio"},
+  futebol:{name:"Futebol",icon:"⚽",color:"#4ade80",cat:"Esportes"},
+  basquete:{name:"Basquete",icon:"🏀",color:"#fb923c",cat:"Esportes"},
+  tenis:{name:"Tênis",icon:"🎾",color:"#bef264",cat:"Esportes"},
+  surf:{name:"Surf",icon:"🏄",color:"#22d3ee",cat:"Esportes"},
+  volei:{name:"Vôlei",icon:"🏐",color:"#fde68a",cat:"Esportes"},
+  luta:{name:"Luta / Artes Marciais",icon:"🥊",color:"#f87171",cat:"Esportes"},
+  yoga:{name:"Yoga",icon:"🧘",color:"#c4b5fd",cat:"Flex & Mente"},
+  pilates:{name:"Pilates",icon:"🤸",color:"#f0abfc",cat:"Flex & Mente"},
+  alongamento:{name:"Alongamento",icon:"🙆",color:"#86efac",cat:"Flex & Mente"},
+  danca:{name:"Dança",icon:"💃",color:"#fb7185",cat:"Flex & Mente"},
+  escalada:{name:"Escalada",icon:"🧗",color:"#fdba74",cat:"Aventura"},
+  outro:{name:"Outro",icon:"✅",color:"#94a3b8",cat:"Outro"}
+};
+
+let user=null,goal=350,entries=[],view="calendar",modal=null,modalSel=new Set();
 
 function dim(m){return new Date(Y,m+1,0).getDate()}
 function fdow(m){return new Date(Y,m,1).getDay()}
 function ds(m,d){return`${Y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
-function mt(m){let c=0;for(let d=1;d<=dim(m);d++)if(days.has(ds(m,d)))c++;return c}
-function pc(p){return p>=90?"g":p>=70?"y":"r"}
-function pbg(p){return p>=90?"rgba(34,197,94,0.15)":p>=70?"rgba(250,204,21,0.15)":"rgba(239,68,68,0.15)"}
+function dayTypes(dateStr){return entries.filter(e=>e.date===dateStr).map(e=>e.type)}
+function uniqueDays(){return new Set(entries.map(e=>e.date)).size}
+function monthDays(m){const pre=ds(m,1),suf=ds(m,dim(m));return new Set(entries.filter(e=>e.date>=pre&&e.date<=suf).map(e=>e.date)).size}
+
 function pcl(p){return p>=90?"#4ade80":p>=70?"#facc15":"#f87171"}
+function pbg(p){return p>=90?"rgba(34,197,94,0.15)":p>=70?"rgba(250,204,21,0.15)":"rgba(239,68,68,0.15)"}
 function bg(p){return p>=90?"linear-gradient(90deg,#22c55e,#4ade80)":p>=70?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)"}
+function pc(p){return p>=90?"g":p>=70?"y":"r"}
 
-const GOOGLE_SVG=`<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
+const GSVG=`<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
 
-async function loginGoogle(){
-  await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:SITE}});
-}
-
-async function logout(){await sb.auth.signOut();user=null;days=new Set();goal=350;render()}
+async function loginGoogle(){await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:SITE}})}
+async function logout(){await sb.auth.signOut();user=null;entries=[];goal=350;render()}
 
 async function loadData(){
   const{data:p}=await sb.from("profiles").select("goal").eq("id",user.id).single();
-  if(p){goal=p.goal}else{
-    await sb.from("profiles").insert({id:user.id,goal:350});
-    goal=350;
-  }
-  const{data:d}=await sb.from("training_days").select("date").eq("user_id",user.id);
-  days=new Set((d||[]).map(r=>r.date));
+  if(p){goal=p.goal}else{await sb.from("profiles").insert({id:user.id,goal:350});goal=350}
+  const{data:d}=await sb.from("training_days").select("date,type").eq("user_id",user.id);
+  entries=d||[];
   render();
 }
 
-async function toggle(m,d){
-  const k=ds(m,d);
-  if(days.has(k)){days.delete(k);await sb.from("training_days").delete().eq("user_id",user.id).eq("date",k)}
-  else{days.add(k);await sb.from("training_days").insert({user_id:user.id,date:k})}
+function openModal(m,d){
+  const date=ds(m,d);
+  modal={m,d,date};
+  modalSel=new Set(dayTypes(date));
   render();
 }
+
+function toggleType(t){
+  if(modalSel.has(t))modalSel.delete(t);else modalSel.add(t);
+  render();
+}
+
+async function saveModal(){
+  if(!modal)return;
+  const date=modal.date;
+  const existing=dayTypes(date);
+  const toAdd=[...modalSel].filter(t=>!existing.includes(t));
+  const toRemove=existing.filter(t=>!modalSel.has(t));
+
+  for(const t of toRemove){
+    await sb.from("training_days").delete().eq("user_id",user.id).eq("date",date).eq("type",t);
+    entries=entries.filter(e=>!(e.date===date&&e.type===t));
+  }
+  for(const t of toAdd){
+    await sb.from("training_days").insert({user_id:user.id,date,type:t});
+    entries.push({date,type:t});
+  }
+  modal=null;render();
+}
+
+function closeModal(){modal=null;render()}
 
 async function setGoal(v){
   const n=parseInt(v);if(isNaN(n)||n<1||n>365)return;
   goal=n;await sb.from("profiles").update({goal:n}).eq("id",user.id);render();
 }
 
+function renderModal(){
+  if(!modal)return"";
+  const d=new Date(modal.date+"T12:00:00");
+  const dateLabel=`${d.getDate()} de ${MN[d.getMonth()]}`;
+  const cats={};
+  Object.entries(TYPES).forEach(([k,v])=>{if(!cats[v.cat])cats[v.cat]=[];cats[v.cat].push(k)});
+
+  let h=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">`;
+  h+=`<h3>Registrar Treino</h3><div class="modal-date">${dateLabel}</div>`;
+
+  for(const[cat,keys]of Object.entries(cats)){
+    h+=`<div class="modal-cat">${cat}</div><div class="modal-types">`;
+    for(const k of keys){
+      const t=TYPES[k],sel=modalSel.has(k);
+      h+=`<div class="type-btn ${sel?"sel":""}" style="--tc:${t.color}" onclick="toggleType('${k}')"><span class="type-icon">${t.icon}</span>${t.name}</div>`;
+    }
+    h+=`</div>`;
+  }
+
+  h+=`<div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveModal()">Salvar</button></div>`;
+  h+=`</div></div>`;
+  return h;
+}
+
 function render(){
   const R=document.getElementById("root");
   if(!user){
-    R.innerHTML=`<div class="auth-box">
-      <h1>TREINO ${Y}</h1>
-      <p>Acompanhe seus treinos durante o ano</p>
-      <button class="btn-google" onclick="loginGoogle()">${GOOGLE_SVG} Entrar com Google</button>
-    </div>`;
+    R.innerHTML=`<div class="auth-box"><h1>TREINO ${Y}</h1><p>Acompanhe seus treinos durante o ano</p><button class="btn-google" onclick="loginGoogle()">${GSVG} Entrar com Google</button></div>`;
     return;
   }
 
   const now=new Date(),doy=Math.floor((now-new Date(Y,0,0))/864e5);
-  const tot=days.size,exp=Math.round((goal/365)*doy),diff=tot-exp;
+  const tot=uniqueDays(),exp=Math.round((goal/365)*doy),diff=tot-exp;
   const apx=doy>0?Math.round((tot/doy)*100):0;
   const name=user.user_metadata?.full_name||user.email;
 
@@ -157,13 +248,13 @@ function render(){
   h+=`<h1>TREINO ${Y}</h1>`;
   h+=`<div class="goal-wrap"><span>Meta:</span><input type="number" min="1" max="365" value="${goal}" onchange="setGoal(this.value)" /><span>de 365 dias</span></div>`;
 
-  const cards=[
+  const crds=[
     {l:"Dias treinados",v:tot,s:`de ${goal}`,c:"#a78bfa"},
     {l:"Dias restantes",v:Math.max(0,365-doy),s:"do ano",c:"#38bdf8"},
     {l:"Ritmo",v:(diff>=0?"+":"")+diff,s:diff>=0?"adiantado":"atrasado",c:diff>=0?"#4ade80":"#f87171"},
     {l:"Aproveitamento",v:apx+"%",s:"do ano até agora",c:"#facc15"}
   ];
-  h+=`<div class="cards">${cards.map(c=>`<div class="card"><div class="card-label">${c.l}</div><div class="card-value" style="color:${c.c}">${c.v}</div><div class="card-sub">${c.s}</div></div>`).join("")}</div>`;
+  h+=`<div class="cards">${crds.map(c=>`<div class="card"><div class="card-label">${c.l}</div><div class="card-value" style="color:${c.c}">${c.v}</div><div class="card-sub">${c.s}</div></div>`).join("")}</div>`;
 
   const p1=Math.min(100,Math.round((tot/goal)*100)),p2=Math.min(100,Math.round((doy/365)*100));
   h+=`<div class="pbox">
@@ -176,27 +267,44 @@ function render(){
   h+=`<div class="nav">
     <button class="${view==="calendar"?"on":"off"}" onclick="view='calendar';render()">Calendário</button>
     <button class="${view==="stats"?"on":"off"}" onclick="view='stats';render()">Estatísticas</button>
+    <button class="${view==="types"?"on":"off"}" onclick="view='types';render()">Por Tipo</button>
   </div>`;
 
   if(view==="calendar"){
+    // Legend
+    const usedTypes=new Set(entries.map(e=>e.type));
+    if(usedTypes.size>0){
+      h+=`<div class="legend">`;
+      for(const t of usedTypes){const ty=TYPES[t];if(ty)h+=`<div class="legend-item"><div class="legend-dot" style="background:${ty.color}"></div>${ty.name}</div>`}
+      h+=`</div>`;
+    }
+
     h+=`<div class="mgrid">`;
     for(let m=0;m<12;m++){
-      const di=dim(m),f=fdow(m),tr=mt(m),pct=Math.round((tr/di)*100);
+      const di=dim(m),f=fdow(m),tr=monthDays(m);
+      const pct=Math.round((tr/di)*100);
       const isCur=now.getFullYear()===Y&&now.getMonth()===m,td=now.getDate();
       h+=`<div class="mbox"><div class="mhead"><span class="mname">${MN[m]}</span><span class="mbadge" style="background:${pbg(pct)};color:${pcl(pct)}">${tr}/${di} · ${pct}%</span></div>`;
       h+=`<div class="dwh">${DW.map(d=>`<span>${d}</span>`).join("")}</div><div class="dgrid">`;
-      for(let i=0;i<f;i++)h+=`<div class="db e"></div>`;
+      for(let i=0;i<f;i++)h+=`<div class="dcell"><div class="dnum empty"></div></div>`;
       for(let d=1;d<=di;d++){
-        const on=days.has(ds(m,d)),ist=isCur&&d===td;
-        h+=`<button class="db ${on?"t":"o"} ${ist?"td":""}" onclick="toggle(${m},${d})">${d}</button>`;
+        const date=ds(m,d),types=dayTypes(date),has=types.length>0;
+        const isT=isCur&&d===td;
+        h+=`<div class="dcell" onclick="openModal(${m},${d})"><div class="dnum ${has?"tr":"notr"} ${isT?"today":""}">${d}</div>`;
+        if(has){
+          h+=`<div class="dots">`;
+          for(const t of types.slice(0,4)){const ty=TYPES[t];if(ty)h+=`<div class="dot" style="background:${ty.color}"></div>`}
+          h+=`</div>`;
+        }
+        h+=`</div>`;
       }
       h+=`</div></div>`;
     }
     h+=`</div>`;
-  }else{
+  }else if(view==="stats"){
     h+=`<div class="slist">`;
     for(let m=0;m<12;m++){
-      const di=dim(m),tr=mt(m),pct=Math.round((tr/di)*100),isCur=now.getMonth()===m;
+      const di=dim(m),tr=monthDays(m),pct=Math.round((tr/di)*100),isCur=now.getMonth()===m;
       h+=`<div class="sr ${isCur?"cur":""}">
         <span class="sn">${MN[m]}</span>
         <div class="sbbg"><div class="sbf" style="width:${pct}%;background:${bg(pct)}"></div></div>
@@ -205,21 +313,48 @@ function render(){
       </div>`;
     }
     h+=`</div>`;
+  }else if(view==="types"){
+    const counts={};
+    entries.forEach(e=>{counts[e.type]=(counts[e.type]||0)+1});
+    const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+
+    h+=`<div class="type-stats">`;
+    for(const[k,c]of sorted){
+      const t=TYPES[k];
+      if(!t)continue;
+      h+=`<div class="ts-card"><div class="ts-icon">${t.icon}</div><div class="ts-info"><div class="ts-name">${t.name}</div><div class="ts-val" style="color:${t.color}">${c}</div></div></div>`;
+    }
+    if(sorted.length===0)h+=`<div style="text-align:center;color:#64748b;grid-column:1/-1;padding:40px">Nenhum treino registrado ainda</div>`;
+    h+=`</div>`;
+
+    // Monthly breakdown
+    if(sorted.length>0){
+      h+=`<div style="margin-top:10px">`;
+      for(const[k,c]of sorted){
+        const t=TYPES[k];if(!t)continue;
+        const pct=Math.min(100,Math.round((c/tot)*100));
+        h+=`<div class="sr" style="margin-bottom:8px">
+          <span style="font-size:18px;width:30px;text-align:center">${t.icon}</span>
+          <span class="sn">${t.name}</span>
+          <div class="sbbg"><div class="sbf" style="width:${pct}%;background:${t.color}"></div></div>
+          <span class="sp" style="color:${t.color}">${c}x</span>
+        </div>`;
+      }
+      h+=`</div>`;
+    }
   }
 
-  h+=`<p class="footer">Toque no dia para marcar/desmarcar · Sincronizado na nuvem</p>`;
+  h+=`<p class="footer">Toque no dia para registrar treinos · Sincronizado na nuvem</p>`;
+  h+=renderModal();
   R.innerHTML=h;
 }
 
-// Init — handle OAuth redirect and session
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
-  if(session){user=session.user;await loadData()}
-  else render();
-
-  sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==="SIGNED_IN"&&session){user=session.user;await loadData()}
-    else if(event==="SIGNED_OUT"){user=null;days=new Set();goal=350;render()}
+  if(session){user=session.user;await loadData()}else render();
+  sb.auth.onAuthStateChange(async(ev,session)=>{
+    if(ev==="SIGNED_IN"&&session){user=session.user;await loadData()}
+    else if(ev==="SIGNED_OUT"){user=null;entries=[];goal=350;render()}
   });
 })();
 </script>
