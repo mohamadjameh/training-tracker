@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Treino 2026 — 350/365</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#0f172a" />
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiVHJlaW5vIDIwMjYiLCJzaG9ydF9uYW1lIjoiVHJlaW5vIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBmMTcyYSIsInRoZW1lX2NvbG9yIjoiIzBmMTcyYSJ9" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Inter','Segoe UI',system-ui,sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100dvh; }
+  #root { max-width: 900px; margin: 0 auto; padding: 20px 16px 40px; }
+  h1 { font-size: 26px; font-weight: 800; text-align: center; background: linear-gradient(135deg,#7c3aed,#a78bfa,#c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { text-align: center; font-size: 13px; color: #64748b; margin-top: 4px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 10px; margin: 20px 0; }
+  .card { background: rgba(255,255,255,0.03); border-radius: 14px; padding: 14px; border: 1px solid rgba(255,255,255,0.06); text-align: center; }
+  .card-label { font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-value { font-size: 26px; font-weight: 800; margin: 4px 0 2px; }
+  .card-sub { font-size: 11px; color: #64748b; }
+  .progress-box { background: rgba(255,255,255,0.03); border-radius: 14px; padding: 16px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.06); }
+  .progress-row { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-bottom: 4px; }
+  .progress-row span:last-child { font-weight: 700; color: #e2e8f0; }
+  .bar-bg { height: 10px; border-radius: 99px; background: rgba(255,255,255,0.06); overflow: hidden; margin-bottom: 10px; }
+  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+  .nav { display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; }
+  .nav button { padding: 8px 20px; border-radius: 99px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+  .nav .active { background: linear-gradient(135deg,#7c3aed,#a78bfa); color: #fff; }
+  .nav .inactive { background: rgba(255,255,255,0.05); color: #94a3b8; }
+  .months-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 14px; }
+  .month-box { background: rgba(255,255,255,0.03); border-radius: 16px; padding: 14px; border: 1px solid rgba(255,255,255,0.06); }
+  .month-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .month-name { font-weight: 700; font-size: 15px; }
+  .month-badge { font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 99px; }
+  .days-header { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; margin-bottom: 4px; }
+  .days-header span { text-align: center; font-size: 10px; color: #64748b; font-weight: 600; }
+  .days-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+  .day-btn { width: 100%; aspect-ratio: 1; border-radius: 50%; border: 1px solid transparent; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .day-btn.empty { pointer-events: none; }
+  .day-btn.off { background: rgba(255,255,255,0.05); color: #94a3b8; }
+  .day-btn.on { background: linear-gradient(135deg,#7c3aed,#a78bfa); color: #fff; font-weight: 700; border-color: transparent; }
+  .day-btn.today { border: 2px solid #a78bfa; }
+  .stats-list { display: grid; gap: 8px; }
+  .stat-row { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px 16px; border: 1px solid rgba(255,255,255,0.06); }
+  .stat-row.current { border-color: rgba(167,139,250,0.3); }
+  .stat-name { width: 75px; font-size: 13px; font-weight: 600; }
+  .stat-bar-bg { flex: 1; height: 8px; border-radius: 99px; background: rgba(255,255,255,0.06); overflow: hidden; }
+  .stat-bar-fill { height: 100%; border-radius: 99px; transition: width 0.3s; }
+  .stat-pct { font-size: 13px; font-weight: 700; width: 42px; text-align: right; }
+  .stat-count { font-size: 12px; color: #64748b; width: 48px; text-align: right; }
+  .footer { text-align: center; font-size: 11px; color: #475569; margin-top: 24px; }
+  .green { color: #4ade80; } .yellow { color: #facc15; } .red { color: #f87171; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+const YEAR = 2026, GOAL = 350;
+const MONTHS = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const DAYS = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const STORAGE_KEY = "treino-2026-data";
+
+let data = {};
+let view = "calendar";
+
+function load() { try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { data = {}; } }
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+function daysIn(m) { return new Date(YEAR, m + 1, 0).getDate(); }
+function firstDay(m) { return new Date(YEAR, m, 1).getDay(); }
+
+function toggle(m, d) { const k = `${m}-${d}`; if (data[k]) delete data[k]; else data[k] = true; save(); render(); }
+
+function monthTrained(m) { let c = 0; for (let k in data) { if (data[k] && k.startsWith(m + "-")) c++; } return c; }
+function totalTrained() { return Object.values(data).filter(Boolean).length; }
+
+function pctColor(p) { return p >= 90 ? "green" : p >= 70 ? "yellow" : "red"; }
+function pctBg(p) { return p >= 90 ? "rgba(34,197,94,0.15)" : p >= 70 ? "rgba(250,204,21,0.15)" : "rgba(239,68,68,0.15)"; }
+function barGrad(p) { return p >= 90 ? "linear-gradient(90deg,#22c55e,#4ade80)" : p >= 70 ? "linear-gradient(90deg,#eab308,#facc15)" : "linear-gradient(90deg,#ef4444,#f87171)"; }
+
+function render() {
+  const now = new Date();
+  const dayOfYear = Math.floor((now - new Date(YEAR, 0, 0)) / 86400000);
+  const total = totalTrained();
+  const expected = Math.round((GOAL / 365) * dayOfYear);
+  const diff = total - expected;
+  const approx = dayOfYear > 0 ? Math.round((total / dayOfYear) * 100) : 0;
+
+  let html = `<h1>TREINO ${YEAR}</h1><p class="subtitle">Meta: ${GOAL} dias de 365</p>`;
+
+  // Cards
+  const cards = [
+    { l: "Dias treinados", v: total, s: `de ${GOAL}`, c: "#a78bfa" },
+    { l: "Dias restantes", v: 365 - dayOfYear, s: "do ano", c: "#38bdf8" },
+    { l: "Ritmo", v: (diff >= 0 ? "+" : "") + diff, s: diff >= 0 ? "adiantado" : "atrasado", c: diff >= 0 ? "#4ade80" : "#f87171" },
+    { l: "Aproveitamento", v: approx + "%", s: "do ano até agora", c: "#facc15" }
+  ];
+  html += `<div class="cards">${cards.map(c => `<div class="card"><div class="card-label">${c.l}</div><div class="card-value" style="color:${c.c}">${c.v}</div><div class="card-sub">${c.s}</div></div>`).join("")}</div>`;
+
+  // Progress
+  const p1 = Math.min(100, Math.round((total / GOAL) * 100));
+  const p2 = Math.min(100, Math.round((dayOfYear / 365) * 100));
+  html += `<div class="progress-box">
+    <div class="progress-row"><span>Progresso da Meta</span><span>${total}/${GOAL}</span></div>
+    <div class="bar-bg"><div class="bar-fill" style="width:${p1}%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+    <div class="progress-row"><span>Progresso do Ano</span><span>${dayOfYear}/365</span></div>
+    <div class="bar-bg"><div class="bar-fill" style="width:${p2}%;background:linear-gradient(90deg,#1e40af,#38bdf8)"></div></div>
+  </div>`;
+
+  // Nav
+  html += `<div class="nav">
+    <button class="${view === "calendar" ? "active" : "inactive"}" onclick="view='calendar';render()">Calendário</button>
+    <button class="${view === "stats" ? "active" : "inactive"}" onclick="view='stats';render()">Estatísticas</button>
+  </div>`;
+
+  if (view === "calendar") {
+    html += `<div class="months-grid">`;
+    for (let m = 0; m < 12; m++) {
+      const days = daysIn(m), first = firstDay(m), trained = monthTrained(m);
+      const pct = Math.round((trained / days) * 100);
+      const isCur = now.getFullYear() === YEAR && now.getMonth() === m;
+      const td = now.getDate();
+
+      html += `<div class="month-box"><div class="month-header"><span class="month-name">${MONTHS[m]}</span><span class="month-badge" style="background:${pctBg(pct)};color:${pct >= 90 ? "#4ade80" : pct >= 70 ? "#facc15" : "#f87171"}">${trained}/${days} · ${pct}%</span></div>`;
+      html += `<div class="days-header">${DAYS.map(d => `<span>${d}</span>`).join("")}</div><div class="days-grid">`;
+      for (let i = 0; i < first; i++) html += `<div class="day-btn empty"></div>`;
+      for (let d = 1; d <= days; d++) {
+        const on = data[`${m}-${d}`];
+        const isToday = isCur && d === td;
+        html += `<button class="day-btn ${on ? "on" : "off"} ${isToday ? "today" : ""}" onclick="toggle(${m},${d})">${d}</button>`;
+      }
+      html += `</div></div>`;
+    }
+    html += `</div>`;
+  } else {
+    html += `<div class="stats-list">`;
+    for (let m = 0; m < 12; m++) {
+      const days = daysIn(m), trained = monthTrained(m), pct = Math.round((trained / days) * 100);
+      const isCur = now.getMonth() === m;
+      html += `<div class="stat-row ${isCur ? "current" : ""}">
+        <span class="stat-name">${MONTHS[m]}</span>
+        <div class="stat-bar-bg"><div class="stat-bar-fill" style="width:${pct}%;background:${barGrad(pct)}"></div></div>
+        <span class="stat-pct ${pctColor(pct)}">${pct}%</span>
+        <span class="stat-count">${trained}/${days}</span>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `<p class="footer">Toque no dia para marcar/desmarcar · Dados salvos no seu dispositivo</p>`;
+  document.getElementById("root").innerHTML = html;
+}
+
+load();
+render();
+</script>
+</body>
+</html>
