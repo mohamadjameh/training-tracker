@@ -1,117 +1,143 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
 <title>Treino Tracker</title>
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="theme-color" content="#0f172a" />
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#0f172a"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100dvh}
-  #root{max-width:900px;margin:0 auto;padding:20px 16px 40px}
-  h1{font-size:26px;font-weight:800;text-align:center;background:linear-gradient(135deg,#7c3aed,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100dvh}
+#root{max-width:900px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:26px;font-weight:800;text-align:center;background:linear-gradient(135deg,#7c3aed,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.auth-box{max-width:380px;margin:80px auto;background:rgba(255,255,255,0.03);border-radius:20px;padding:40px 24px;border:1px solid rgba(255,255,255,0.06);text-align:center}
+.auth-box p{font-size:14px;color:#94a3b8;margin:8px 0 32px}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;font-weight:600;cursor:pointer}
+.btn-google svg{width:20px;height:20px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.topbar-user{font-size:12px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.05);color:#94a3b8}
+.year-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:4px 0}
+.year-nav button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.year-nav button:disabled{opacity:.2;cursor:not-allowed}
+.year-label{font-size:28px;font-weight:800;background:linear-gradient(135deg,#7c3aed,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;min-width:80px;text-align:center}
+.year-current{font-size:11px;color:#64748b;text-align:center;margin-top:2px;cursor:pointer}
+.year-current:hover{color:#a78bfa}
+.subtitle{text-align:center;font-size:13px;color:#64748b;margin-top:4px}
+.goal-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
+.goal-wrap input{width:56px;padding:4px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;text-align:center;font-weight:700;outline:none}
+.goal-wrap span{font-size:13px;color:#64748b}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
+.card{background:rgba(255,255,255,0.03);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.06);text-align:center}
+.card-label{font-size:10px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.card-value{font-size:26px;font-weight:800;margin:4px 0 2px}
+.card-sub{font-size:11px;color:#64748b}
+.pbox{background:rgba(255,255,255,0.03);border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.06)}
+.prow{display:flex;justify-content:space-between;font-size:13px;color:#94a3b8;margin-bottom:4px}
+.prow span:last-child{font-weight:700;color:#e2e8f0}
+.bbg{height:10px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:10px}
+.bfill{height:100%;border-radius:99px;transition:width .4s ease}
+.nav{display:flex;gap:6px;justify-content:center;margin-bottom:18px;flex-wrap:wrap}
+.nav button{padding:8px 16px;border-radius:99px;border:none;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.nav .on{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+.nav .off{background:rgba(255,255,255,0.05);color:#94a3b8}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.mbox{background:rgba(255,255,255,0.03);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.06)}
+.mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.mname{font-weight:700;font-size:15px}
+.mbadge{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px}
+.dwh{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+.dwh span{text-align:center;font-size:10px;color:#64748b;font-weight:600}
+.dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.dcell{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
+.dnum{width:30px;height:30px;border-radius:50%;border:1px solid transparent;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.dnum.empty{pointer-events:none}
+.dnum.notr{background:rgba(255,255,255,0.05);color:#94a3b8}
+.dnum.tr{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:700}
+.dnum.today{border:2px solid #a78bfa}
+.dots{display:flex;gap:2px;height:6px;align-items:center;justify-content:center}
+.dot{width:5px;height:5px;border-radius:50%}
+.overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.modal{background:#1e293b;border-radius:20px;padding:24px;max-width:360px;width:100%;border:1px solid rgba(255,255,255,0.1);max-height:85vh;overflow-y:auto}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.modal-date{font-size:13px;color:#64748b;margin-bottom:16px}
+.modal-cat{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
+.modal-types{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.type-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);cursor:pointer;transition:all .15s;font-size:13px;color:#94a3b8}
+.type-btn.sel{border-color:var(--tc);background:rgba(255,255,255,0.05);color:#e2e8f0;font-weight:600}
+.type-icon{font-size:18px}
+.modal-actions{display:flex;gap:8px;margin-top:20px}
+.modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer}
+.btn-save{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
+.btn-cancel{background:rgba(255,255,255,0.05);color:#94a3b8}
+.slist{display:grid;gap:8px}
+.sr{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border-radius:12px;padding:12px 16px;border:1px solid rgba(255,255,255,0.06)}
+.sr.cur{border-color:rgba(167,139,250,0.3)}
+.sn{width:75px;font-size:13px;font-weight:600}
+.sbbg{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden}
+.sbf{height:100%;border-radius:99px;transition:width .3s}
+.sp{font-size:13px;font-weight:700;width:42px;text-align:right}
+.sc{font-size:12px;color:#64748b;width:48px;text-align:right}
+.type-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
+.ts-card{background:rgba(255,255,255,0.03);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px}
+.ts-icon{font-size:24px}
+.ts-info{flex:1}
+.ts-name{font-size:12px;color:#94a3b8}
+.ts-val{font-size:20px;font-weight:800}
+.legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:#94a3b8}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.footer{text-align:center;font-size:11px;color:#475569;margin-top:24px}
+.g{color:#4ade80}.y{color:#facc15}.r{color:#f87171}
+.ld{text-align:center;color:#64748b;padding:60px 20px;font-size:14px}
 
-  .auth-box{max-width:380px;margin:80px auto;background:rgba(255,255,255,0.03);border-radius:20px;padding:40px 24px;border:1px solid rgba(255,255,255,0.06);text-align:center}
-  .auth-box p{font-size:14px;color:#94a3b8;margin:8px 0 32px}
-  .btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
-  .btn-google:hover{background:rgba(255,255,255,0.1)}
-  .btn-google svg{width:20px;height:20px}
+/* Workout log styles */
+.wl-section{background:rgba(255,255,255,0.03);border-radius:16px;padding:18px;border:1px solid rgba(255,255,255,0.06);margin-bottom:14px}
+.wl-section h3{font-size:16px;font-weight:700;margin-bottom:12px}
+.wl-date-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.wl-date-nav button{width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.wl-date-label{font-size:15px;font-weight:700;min-width:180px;text-align:center}
+.wl-exercise{background:rgba(255,255,255,0.03);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.06)}
+.wl-ex-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.wl-ex-name{font-size:14px;font-weight:700;color:#a78bfa}
+.wl-ex-remove{background:none;border:none;color:#f87171;font-size:12px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.wl-ex-remove:hover{background:rgba(248,113,113,0.1)}
+.wl-set-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px}
+.wl-set-num{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#64748b;flex-shrink:0}
+.wl-input{width:65px;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:13px;text-align:center;outline:none}
+.wl-input:focus{border-color:#7c3aed}
+.wl-input-label{font-size:11px;color:#64748b;width:35px}
+.wl-set-remove{background:none;border:none;color:#64748b;cursor:pointer;font-size:14px;padding:2px 6px}
+.wl-add-set{background:none;border:1px dashed rgba(255,255,255,0.1);color:#94a3b8;padding:6px;border-radius:8px;width:100%;cursor:pointer;font-size:12px;margin-top:4px}
+.wl-add-set:hover{border-color:#7c3aed;color:#a78bfa}
+.wl-add-exercise{display:flex;gap:8px;margin-top:14px}
+.wl-add-exercise input{flex:1;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:14px;outline:none}
+.wl-add-exercise input::placeholder{color:#475569}
+.wl-add-exercise button{padding:10px 18px;border-radius:10px;border:none;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.wl-save-bar{display:flex;gap:8px;margin-top:16px}
+.wl-save-bar button{flex:1;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer}
+.wl-suggestions{position:relative}
+.wl-sug-list{position:absolute;top:100%;left:0;right:60px;background:#1e293b;border:1px solid rgba(255,255,255,0.1);border-radius:10px;max-height:150px;overflow-y:auto;z-index:50;margin-top:4px}
+.wl-sug-item{padding:10px 14px;cursor:pointer;font-size:13px;color:#94a3b8;border-bottom:1px solid rgba(255,255,255,0.05)}
+.wl-sug-item:hover{background:rgba(255,255,255,0.05);color:#e2e8f0}
+.wl-empty{text-align:center;color:#64748b;padding:30px;font-size:14px}
 
-  .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .topbar-user{font-size:12px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
-  .btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.05);color:#94a3b8}
+/* History */
+.wl-history-item{background:rgba(255,255,255,0.03);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.06)}
+.wl-history-date{font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:8px}
+.wl-history-ex{font-size:13px;margin-bottom:4px}
+.wl-history-ex-name{font-weight:600;color:#e2e8f0}
+.wl-history-sets{color:#94a3b8;font-size:12px}
 
-  /* Year nav */
-  .year-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:4px 0}
-  .year-nav button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
-  .year-nav button:hover{background:rgba(255,255,255,0.1)}
-  .year-nav button:disabled{opacity:0.2;cursor:not-allowed}
-  .year-label{font-size:28px;font-weight:800;background:linear-gradient(135deg,#7c3aed,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;min-width:80px;text-align:center}
-  .year-current{font-size:11px;color:#64748b;text-align:center;margin-top:2px;cursor:pointer}
-  .year-current:hover{color:#a78bfa}
-
-  .subtitle{text-align:center;font-size:13px;color:#64748b;margin-top:4px}
-  .goal-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
-  .goal-wrap input{width:56px;padding:4px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;text-align:center;font-weight:700;outline:none}
-  .goal-wrap input:focus{border-color:#7c3aed}
-  .goal-wrap span{font-size:13px;color:#64748b}
-
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:16px 0}
-  .card{background:rgba(255,255,255,0.03);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.06);text-align:center}
-  .card-label{font-size:10px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-  .card-value{font-size:26px;font-weight:800;margin:4px 0 2px}
-  .card-sub{font-size:11px;color:#64748b}
-
-  .pbox{background:rgba(255,255,255,0.03);border-radius:14px;padding:16px;margin-bottom:18px;border:1px solid rgba(255,255,255,0.06)}
-  .prow{display:flex;justify-content:space-between;font-size:13px;color:#94a3b8;margin-bottom:4px}
-  .prow span:last-child{font-weight:700;color:#e2e8f0}
-  .bbg{height:10px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden;margin-bottom:10px}
-  .bfill{height:100%;border-radius:99px;transition:width .4s ease}
-
-  .nav{display:flex;gap:8px;justify-content:center;margin-bottom:18px;flex-wrap:wrap}
-  .nav button{padding:8px 20px;border-radius:99px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
-  .nav .on{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
-  .nav .off{background:rgba(255,255,255,0.05);color:#94a3b8}
-
-  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-  .mbox{background:rgba(255,255,255,0.03);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.06)}
-  .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  .mname{font-weight:700;font-size:15px}
-  .mbadge{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px}
-  .dwh{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
-  .dwh span{text-align:center;font-size:10px;color:#64748b;font-weight:600}
-  .dgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-
-  .dcell{display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer}
-  .dnum{width:30px;height:30px;border-radius:50%;border:1px solid transparent;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s}
-  .dnum.empty{pointer-events:none}
-  .dnum.notr{background:rgba(255,255,255,0.05);color:#94a3b8}
-  .dnum.tr{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;font-weight:700}
-  .dnum.today{border:2px solid #a78bfa}
-  .dots{display:flex;gap:2px;height:6px;align-items:center;justify-content:center}
-  .dot{width:5px;height:5px;border-radius:50%}
-
-  .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
-  .modal{background:#1e293b;border-radius:20px;padding:24px;max-width:360px;width:100%;border:1px solid rgba(255,255,255,0.1);max-height:80vh;overflow-y:auto}
-  .modal h3{font-size:18px;font-weight:700;margin-bottom:4px}
-  .modal-date{font-size:13px;color:#64748b;margin-bottom:16px}
-  .modal-cat{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px}
-  .modal-types{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .type-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);cursor:pointer;transition:all .15s;font-size:13px;color:#94a3b8}
-  .type-btn.sel{border-color:var(--tc);background:rgba(255,255,255,0.05);color:#e2e8f0;font-weight:600}
-  .type-btn:hover{background:rgba(255,255,255,0.05)}
-  .type-icon{font-size:18px}
-  .modal-actions{display:flex;gap:8px;margin-top:20px}
-  .modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer}
-  .btn-save{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
-  .btn-cancel{background:rgba(255,255,255,0.05);color:#94a3b8}
-
-  .slist{display:grid;gap:8px}
-  .sr{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border-radius:12px;padding:12px 16px;border:1px solid rgba(255,255,255,0.06)}
-  .sr.cur{border-color:rgba(167,139,250,0.3)}
-  .sn{width:75px;font-size:13px;font-weight:600}
-  .sbbg{flex:1;height:8px;border-radius:99px;background:rgba(255,255,255,0.06);overflow:hidden}
-  .sbf{height:100%;border-radius:99px;transition:width .3s}
-  .sp{font-size:13px;font-weight:700;width:42px;text-align:right}
-  .sc{font-size:12px;color:#64748b;width:48px;text-align:right}
-
-  .type-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
-  .ts-card{background:rgba(255,255,255,0.03);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px}
-  .ts-icon{font-size:24px}
-  .ts-info{flex:1}
-  .ts-name{font-size:12px;color:#94a3b8}
-  .ts-val{font-size:20px;font-weight:800}
-
-  .footer{text-align:center;font-size:11px;color:#475569;margin-top:24px}
-  .g{color:#4ade80}.y{color:#facc15}.r{color:#f87171}
-  .ld{text-align:center;color:#64748b;padding:60px 20px;font-size:14px}
-
-  .legend{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px}
-  .legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:#94a3b8}
-  .legend-dot{width:8px;height:8px;border-radius:50%}
+/* Chart */
+.chart-select{margin-bottom:16px}
+.chart-select select{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:14px;outline:none;width:100%}
+.chart-select select option{background:#1e293b}
+.chart-box{background:rgba(255,255,255,0.03);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,0.06);margin-bottom:14px}
+.chart-title{font-size:14px;font-weight:700;margin-bottom:12px}
+.chart-empty{text-align:center;color:#64748b;padding:20px;font-size:13px}
 </style>
 </head>
 <body>
@@ -124,35 +150,22 @@ const sb=supabase.createClient(SURL,SKEY);
 
 const MN=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DW=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
-
-const TYPES={
-  musculacao:{name:"Musculação",icon:"🏋️",color:"#a78bfa",cat:"Força"},
-  calistenia:{name:"Calistenia",icon:"💪",color:"#c084fc",cat:"Força"},
-  crossfit:{name:"CrossFit / Funcional",icon:"🔥",color:"#f97316",cat:"Força"},
-  corrida:{name:"Corrida",icon:"🏃",color:"#22d3ee",cat:"Cardio"},
-  caminhada:{name:"Caminhada",icon:"🚶",color:"#67e8f9",cat:"Cardio"},
-  bike:{name:"Bike / Ciclismo",icon:"🚴",color:"#34d399",cat:"Cardio"},
-  natacao:{name:"Natação",icon:"🏊",color:"#38bdf8",cat:"Cardio"},
-  remo:{name:"Remo",icon:"🚣",color:"#2dd4bf",cat:"Cardio"},
-  hiit:{name:"HIIT",icon:"⚡",color:"#fbbf24",cat:"Cardio"},
-  pular_corda:{name:"Pular Corda",icon:"〰️",color:"#a3e635",cat:"Cardio"},
-  futebol:{name:"Futebol",icon:"⚽",color:"#4ade80",cat:"Esportes"},
-  basquete:{name:"Basquete",icon:"🏀",color:"#fb923c",cat:"Esportes"},
-  tenis:{name:"Tênis",icon:"🎾",color:"#bef264",cat:"Esportes"},
-  surf:{name:"Surf",icon:"🏄",color:"#22d3ee",cat:"Esportes"},
-  volei:{name:"Vôlei",icon:"🏐",color:"#fde68a",cat:"Esportes"},
-  luta:{name:"Luta / Artes Marciais",icon:"🥊",color:"#f87171",cat:"Esportes"},
-  yoga:{name:"Yoga",icon:"🧘",color:"#c4b5fd",cat:"Flex & Mente"},
-  pilates:{name:"Pilates",icon:"🤸",color:"#f0abfc",cat:"Flex & Mente"},
-  alongamento:{name:"Alongamento",icon:"🙆",color:"#86efac",cat:"Flex & Mente"},
-  danca:{name:"Dança",icon:"💃",color:"#fb7185",cat:"Flex & Mente"},
-  escalada:{name:"Escalada",icon:"🧗",color:"#fdba74",cat:"Aventura"},
-  outro:{name:"Outro",icon:"✅",color:"#94a3b8",cat:"Outro"}
-};
+const TYPES={musculacao:{name:"Musculação",icon:"🏋️",color:"#a78bfa",cat:"Força"},calistenia:{name:"Calistenia",icon:"💪",color:"#c084fc",cat:"Força"},crossfit:{name:"CrossFit / Funcional",icon:"🔥",color:"#f97316",cat:"Força"},corrida:{name:"Corrida",icon:"🏃",color:"#22d3ee",cat:"Cardio"},caminhada:{name:"Caminhada",icon:"🚶",color:"#67e8f9",cat:"Cardio"},bike:{name:"Bike / Ciclismo",icon:"🚴",color:"#34d399",cat:"Cardio"},natacao:{name:"Natação",icon:"🏊",color:"#38bdf8",cat:"Cardio"},remo:{name:"Remo",icon:"🚣",color:"#2dd4bf",cat:"Cardio"},hiit:{name:"HIIT",icon:"⚡",color:"#fbbf24",cat:"Cardio"},pular_corda:{name:"Pular Corda",icon:"〰️",color:"#a3e635",cat:"Cardio"},futebol:{name:"Futebol",icon:"⚽",color:"#4ade80",cat:"Esportes"},basquete:{name:"Basquete",icon:"🏀",color:"#fb923c",cat:"Esportes"},tenis:{name:"Tênis",icon:"🎾",color:"#bef264",cat:"Esportes"},surf:{name:"Surf",icon:"🏄",color:"#22d3ee",cat:"Esportes"},volei:{name:"Vôlei",icon:"🏐",color:"#fde68a",cat:"Esportes"},luta:{name:"Luta / Artes Marciais",icon:"🥊",color:"#f87171",cat:"Esportes"},yoga:{name:"Yoga",icon:"🧘",color:"#c4b5fd",cat:"Flex & Mente"},pilates:{name:"Pilates",icon:"🤸",color:"#f0abfc",cat:"Flex & Mente"},alongamento:{name:"Alongamento",icon:"🙆",color:"#86efac",cat:"Flex & Mente"},danca:{name:"Dança",icon:"💃",color:"#fb7185",cat:"Flex & Mente"},escalada:{name:"Escalada",icon:"🧗",color:"#fdba74",cat:"Aventura"},outro:{name:"Outro",icon:"✅",color:"#94a3b8",cat:"Outro"}};
 
 let user=null,goal=350,entries=[],view="calendar",modal=null,modalSel=new Set();
 let selYear=new Date().getFullYear();
 const MIN_YEAR=2024,MAX_YEAR=2030;
+
+// Workout state
+let wlDate=new Date().toISOString().slice(0,10);
+let wlExercises=[];// [{name,sets:[{reps,weight}]}]
+let wlLogId=null;
+let wlSavedExercises=[];
+let wlSugQuery="";
+let wlHistory=[];
+let wlSubView="log"; // log, history, evolution
+let wlChartExercise="";
+let wlChartData=[];
 
 function isLeap(y){return(y%4===0&&y%100!==0)||y%400===0}
 function daysInYear(y){return isLeap(y)?366:365}
@@ -160,29 +173,22 @@ function dim(y,m){return new Date(y,m+1,0).getDate()}
 function fdow(y,m){return new Date(y,m,1).getDay()}
 function ds(y,m,d){return`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
 function yearEntries(){return entries.filter(e=>e.date.startsWith(selYear+"-"))}
-function dayTypes(dateStr){return entries.filter(e=>e.date===dateStr).map(e=>e.type)}
+function dayTypes(s){return entries.filter(e=>e.date===s).map(e=>e.type)}
 function uniqueDays(){return new Set(yearEntries().map(e=>e.date)).size}
-function monthDays(m){const pre=ds(selYear,m,1),suf=ds(selYear,m,dim(selYear,m));return new Set(entries.filter(e=>e.date>=pre&&e.date<=suf).map(e=>e.date)).size}
-
+function monthDays(m){const a=ds(selYear,m,1),b=ds(selYear,m,dim(selYear,m));return new Set(entries.filter(e=>e.date>=a&&e.date<=b).map(e=>e.date)).size}
 function pcl(p){return p>=90?"#4ade80":p>=70?"#facc15":"#f87171"}
 function pbg(p){return p>=90?"rgba(34,197,94,0.15)":p>=70?"rgba(250,204,21,0.15)":"rgba(239,68,68,0.15)"}
 function bg(p){return p>=90?"linear-gradient(90deg,#22c55e,#4ade80)":p>=70?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)"}
 function pc(p){return p>=90?"g":p>=70?"y":"r"}
-
 function isCurrentYear(){return selYear===new Date().getFullYear()}
-function dayOfYear(){
-  const now=new Date();
-  if(selYear<now.getFullYear())return daysInYear(selYear);
-  if(selYear>now.getFullYear())return 0;
-  return Math.floor((now-new Date(selYear,0,0))/864e5);
-}
+function dayOfYear(){const n=new Date();if(selYear<n.getFullYear())return daysInYear(selYear);if(selYear>n.getFullYear())return 0;return Math.floor((n-new Date(selYear,0,0))/864e5)}
+
+function fmtDate(s){const p=s.split("-");return`${parseInt(p[2])} de ${MN[parseInt(p[1])-1]}`}
+function fmtDateFull(s){const p=s.split("-");return`${parseInt(p[2])} de ${MN[parseInt(p[1])-1]} de ${p[0]}`}
 
 const GSVG=`<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
 
-function changeYear(delta){
-  const ny=selYear+delta;
-  if(ny>=MIN_YEAR&&ny<=MAX_YEAR){selYear=ny;loadData()}
-}
+function changeYear(d){const n=selYear+d;if(n>=MIN_YEAR&&n<=MAX_YEAR){selYear=n;loadData()}}
 function goCurrentYear(){selYear=new Date().getFullYear();loadData()}
 
 async function loginGoogle(){await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:SITE}})}
@@ -190,171 +196,269 @@ async function logout(){await sb.auth.signOut();user=null;entries=[];goal=350;re
 
 async function loadData(){
   const{data:p}=await sb.from("profiles").select("goal").eq("id",user.id).single();
-  if(p){goal=p.goal}else{await sb.from("profiles").insert({id:user.id,goal:350});goal=350}
-  const startDate=`${selYear}-01-01`,endDate=`${selYear}-12-31`;
-  const{data:d}=await sb.from("training_days").select("date,type").eq("user_id",user.id).gte("date",startDate).lte("date",endDate);
+  if(p)goal=p.goal;else{await sb.from("profiles").insert({id:user.id,goal:350});goal=350}
+  const sd=`${selYear}-01-01`,ed=`${selYear}-12-31`;
+  const{data:d}=await sb.from("training_days").select("date,type").eq("user_id",user.id).gte("date",sd).lte("date",ed);
   entries=d||[];
+  // Load saved exercises
+  const{data:ue}=await sb.from("user_exercises").select("name,muscle_group").eq("user_id",user.id).order("name");
+  wlSavedExercises=(ue||[]).map(e=>e.name);
   render();
 }
 
-function openModal(m,d){
-  const date=ds(selYear,m,d);
-  modal={m,d,date};
-  modalSel=new Set(dayTypes(date));
-  render();
-}
-
-function toggleType(t){
-  if(modalSel.has(t))modalSel.delete(t);else modalSel.add(t);
-  render();
-}
-
+// Training day modal
+function openModal(m,d){modal={m,d,date:ds(selYear,m,d)};modalSel=new Set(dayTypes(modal.date));render()}
+function toggleTypeM(t){if(modalSel.has(t))modalSel.delete(t);else modalSel.add(t);render()}
 async function saveModal(){
-  if(!modal)return;
-  const date=modal.date;
-  const existing=dayTypes(date);
-  const toAdd=[...modalSel].filter(t=>!existing.includes(t));
-  const toRemove=existing.filter(t=>!modalSel.has(t));
-  for(const t of toRemove){
-    await sb.from("training_days").delete().eq("user_id",user.id).eq("date",date).eq("type",t);
-    entries=entries.filter(e=>!(e.date===date&&e.type===t));
-  }
-  for(const t of toAdd){
-    await sb.from("training_days").insert({user_id:user.id,date,type:t});
-    entries.push({date,type:t});
-  }
+  if(!modal)return;const date=modal.date,existing=dayTypes(date);
+  for(const t of existing.filter(t=>!modalSel.has(t))){await sb.from("training_days").delete().eq("user_id",user.id).eq("date",date).eq("type",t);entries=entries.filter(e=>!(e.date===date&&e.type===t))}
+  for(const t of[...modalSel].filter(t=>!existing.includes(t))){await sb.from("training_days").insert({user_id:user.id,date,type:t});entries.push({date,type:t})}
   modal=null;render();
 }
-
 function closeModal(){modal=null;render()}
+async function setGoal(v){const n=parseInt(v);if(isNaN(n)||n<1||n>366)return;goal=n;await sb.from("profiles").update({goal:n}).eq("id",user.id);render()}
 
-async function setGoal(v){
-  const n=parseInt(v);if(isNaN(n)||n<1||n>366)return;
-  goal=n;await sb.from("profiles").update({goal:n}).eq("id",user.id);render();
+// Workout log functions
+function wlChangeDate(delta){
+  const d=new Date(wlDate+"T12:00:00");d.setDate(d.getDate()+delta);
+  wlDate=d.toISOString().slice(0,10);wlExercises=[];wlLogId=null;loadWorkoutForDate();
+}
+
+async function loadWorkoutForDate(){
+  const{data:logs}=await sb.from("workout_logs").select("id").eq("user_id",user.id).eq("date",wlDate);
+  if(logs&&logs.length>0){
+    wlLogId=logs[0].id;
+    const{data:sets}=await sb.from("exercise_sets").select("exercise_name,set_number,reps,weight_kg").eq("workout_log_id",wlLogId).order("exercise_name").order("set_number");
+    const ex={};
+    (sets||[]).forEach(s=>{if(!ex[s.exercise_name])ex[s.exercise_name]=[];ex[s.exercise_name].push({reps:s.reps,weight:parseFloat(s.weight_kg)})});
+    wlExercises=Object.entries(ex).map(([name,sets])=>({name,sets}));
+  }else{wlLogId=null;wlExercises=[]}
+  render();
+}
+
+function wlAddExercise(){
+  const input=document.getElementById("wl-ex-input");if(!input)return;
+  const name=input.value.trim();if(!name)return;
+  wlExercises.push({name,sets:[{reps:12,weight:0}]});
+  wlSugQuery="";input.value="";render();
+}
+
+function wlRemoveExercise(i){wlExercises.splice(i,1);render()}
+function wlAddSet(i){wlExercises[i].sets.push({reps:12,weight:0});render()}
+function wlRemoveSet(i,j){wlExercises[i].sets.splice(j,1);if(wlExercises[i].sets.length===0)wlExercises.splice(i,1);render()}
+
+function wlUpdateSet(i,j,field,val){
+  const v=parseFloat(val)||0;
+  wlExercises[i].sets[j][field]=v;
+  // Don't re-render on input to keep focus
+}
+
+function wlShowSuggestions(val){wlSugQuery=val.trim().toLowerCase();render()}
+
+async function wlSave(){
+  if(wlExercises.length===0)return;
+  // Delete old log if exists
+  if(wlLogId){await sb.from("exercise_sets").delete().eq("workout_log_id",wlLogId);await sb.from("workout_logs").delete().eq("id",wlLogId)}
+  // Create new log
+  const{data:log}=await sb.from("workout_logs").insert({user_id:user.id,date:wlDate}).select("id").single();
+  if(!log)return;
+  wlLogId=log.id;
+  // Insert all sets
+  const rows=[];
+  for(const ex of wlExercises){
+    for(let s=0;s<ex.sets.length;s++){
+      rows.push({workout_log_id:log.id,exercise_name:ex.name,set_number:s+1,reps:ex.sets[s].reps,weight_kg:ex.sets[s].weight});
+    }
+    // Save exercise name
+    await sb.from("user_exercises").upsert({user_id:user.id,name:ex.name},{onConflict:"user_id,name"}).select();
+  }
+  if(rows.length>0)await sb.from("exercise_sets").insert(rows);
+  // Refresh saved exercises
+  const{data:ue}=await sb.from("user_exercises").select("name").eq("user_id",user.id).order("name");
+  wlSavedExercises=(ue||[]).map(e=>e.name);
+  alert("Treino salvo!");render();
+}
+
+async function loadHistory(){
+  const{data:logs}=await sb.from("workout_logs").select("id,date").eq("user_id",user.id).order("date",{ascending:false}).limit(20);
+  if(!logs||logs.length===0){wlHistory=[];render();return}
+  const ids=logs.map(l=>l.id);
+  const{data:sets}=await sb.from("exercise_sets").select("workout_log_id,exercise_name,set_number,reps,weight_kg").in("workout_log_id",ids).order("set_number");
+  wlHistory=logs.map(l=>{
+    const exSets=(sets||[]).filter(s=>s.workout_log_id===l.id);
+    const exMap={};
+    exSets.forEach(s=>{if(!exMap[s.exercise_name])exMap[s.exercise_name]=[];exMap[s.exercise_name].push(s)});
+    return{date:l.date,exercises:Object.entries(exMap).map(([n,ss])=>({name:n,sets:ss}))};
+  });
+  render();
+}
+
+async function loadEvolution(exName){
+  if(!exName){wlChartData=[];render();return}
+  wlChartExercise=exName;
+  const{data:logs}=await sb.from("workout_logs").select("id,date").eq("user_id",user.id).order("date");
+  if(!logs||logs.length===0){wlChartData=[];render();return}
+  const ids=logs.map(l=>l.id);
+  const{data:sets}=await sb.from("exercise_sets").select("workout_log_id,reps,weight_kg").in("workout_log_id",ids).eq("exercise_name",exName).order("set_number");
+  const logMap={};logs.forEach(l=>logMap[l.id]=l.date);
+  const byDate={};
+  (sets||[]).forEach(s=>{
+    const d=logMap[s.workout_log_id];if(!d)return;
+    if(!byDate[d])byDate[d]={maxWeight:0,totalVol:0,totalReps:0,sets:0};
+    const w=parseFloat(s.weight_kg);
+    byDate[d].maxWeight=Math.max(byDate[d].maxWeight,w);
+    byDate[d].totalVol+=w*s.reps;
+    byDate[d].totalReps+=s.reps;
+    byDate[d].sets++;
+  });
+  wlChartData=Object.entries(byDate).map(([d,v])=>({date:d,...v})).sort((a,b)=>a.date.localeCompare(b.date));
+  render();
+}
+
+function drawChart(data,key,label,color,w=320,h=160){
+  if(data.length<2)return`<div class="chart-empty">Precisa de pelo menos 2 treinos para ver a evolução</div>`;
+  const vals=data.map(d=>d[key]),minV=Math.min(...vals),maxV=Math.max(...vals);
+  const range=maxV-minV||1;
+  const pad=30,pw=w-pad*2,ph=h-pad*2;
+  const pts=data.map((d,i)=>{const x=pad+(i/(data.length-1))*pw;const y=h-pad-((d[key]-minV)/range)*ph;return{x,y,d}});
+  let svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto">`;
+  // Grid lines
+  for(let i=0;i<=4;i++){
+    const y=pad+(i/4)*ph;const v=maxV-((i/4)*range);
+    svg+=`<line x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+    svg+=`<text x="${pad-4}" y="${y+4}" fill="#64748b" font-size="9" text-anchor="end">${Math.round(v)}</text>`;
+  }
+  // Line
+  const pathD=pts.map((p,i)=>`${i===0?"M":"L"}${p.x},${p.y}`).join(" ");
+  svg+=`<path d="${pathD}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  // Area
+  svg+=`<path d="${pathD} L${pts[pts.length-1].x},${h-pad} L${pts[0].x},${h-pad} Z" fill="url(#grad-${key})" opacity="0.15"/>`;
+  svg+=`<defs><linearGradient id="grad-${key}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>`;
+  // Dots
+  pts.forEach(p=>{svg+=`<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}" stroke="#0f172a" stroke-width="2"/>`});
+  // Date labels
+  if(data.length<=10){pts.forEach((p,i)=>{const dl=data[i].date.slice(5);svg+=`<text x="${p.x}" y="${h-8}" fill="#64748b" font-size="8" text-anchor="middle">${dl}</text>`})}
+  else{[0,Math.floor(data.length/2),data.length-1].forEach(i=>{const dl=data[i].date.slice(5);svg+=`<text x="${pts[i].x}" y="${h-8}" fill="#64748b" font-size="8" text-anchor="middle">${dl}</text>`})}
+  svg+=`</svg>`;
+  return svg;
 }
 
 function renderModal(){
   if(!modal)return"";
-  const d=new Date(modal.date+"T12:00:00");
-  const dateLabel=`${d.getDate()} de ${MN[d.getMonth()]} de ${selYear}`;
-  const cats={};
-  Object.entries(TYPES).forEach(([k,v])=>{if(!cats[v.cat])cats[v.cat]=[];cats[v.cat].push(k)});
-  let h=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">`;
-  h+=`<h3>Registrar Treino</h3><div class="modal-date">${dateLabel}</div>`;
-  for(const[cat,keys]of Object.entries(cats)){
-    h+=`<div class="modal-cat">${cat}</div><div class="modal-types">`;
-    for(const k of keys){const t=TYPES[k],sel=modalSel.has(k);h+=`<div class="type-btn ${sel?"sel":""}" style="--tc:${t.color}" onclick="toggleType('${k}')"><span class="type-icon">${t.icon}</span>${t.name}</div>`}
-    h+=`</div>`;
-  }
+  const dateLabel=fmtDateFull(modal.date);
+  const cats={};Object.entries(TYPES).forEach(([k,v])=>{if(!cats[v.cat])cats[v.cat]=[];cats[v.cat].push(k)});
+  let h=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal"><h3>Registrar Treino</h3><div class="modal-date">${dateLabel}</div>`;
+  for(const[cat,keys]of Object.entries(cats)){h+=`<div class="modal-cat">${cat}</div><div class="modal-types">`;for(const k of keys){const t=TYPES[k],sel=modalSel.has(k);h+=`<div class="type-btn ${sel?"sel":""}" style="--tc:${t.color}" onclick="toggleTypeM('${k}')"><span class="type-icon">${t.icon}</span>${t.name}</div>`}h+=`</div>`}
   h+=`<div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveModal()">Salvar</button></div></div></div>`;
+  return h;
+}
+
+function renderWorkoutLog(){
+  let h=`<div class="wl-date-nav"><button onclick="wlChangeDate(-1)">‹</button><span class="wl-date-label">${fmtDateFull(wlDate)}</span><button onclick="wlChangeDate(1)">›</button></div>`;
+
+  // Sub nav
+  h+=`<div class="nav" style="margin-bottom:14px"><button class="${wlSubView==="log"?"on":"off"}" onclick="wlSubView='log';loadWorkoutForDate()">Registrar</button><button class="${wlSubView==="history"?"on":"off"}" onclick="wlSubView='history';loadHistory()">Histórico</button><button class="${wlSubView==="evolution"?"on":"off"}" onclick="wlSubView='evolution';wlChartExercise=wlSavedExercises[0]||'';loadEvolution(wlChartExercise)">Evolução</button></div>`;
+
+  if(wlSubView==="log"){
+    if(wlExercises.length===0)h+=`<div class="wl-empty">Nenhum exercício adicionado ainda.<br>Adicione abaixo para começar.</div>`;
+    wlExercises.forEach((ex,i)=>{
+      h+=`<div class="wl-exercise"><div class="wl-ex-header"><span class="wl-ex-name">🏋️ ${ex.name}</span><button class="wl-ex-remove" onclick="wlRemoveExercise(${i})">✕ Remover</button></div>`;
+      ex.sets.forEach((s,j)=>{
+        h+=`<div class="wl-set-row"><div class="wl-set-num">${j+1}</div><span class="wl-input-label">Reps</span><input class="wl-input" type="number" value="${s.reps}" onchange="wlUpdateSet(${i},${j},'reps',this.value)"/><span class="wl-input-label">Kg</span><input class="wl-input" type="number" step="0.5" value="${s.weight}" onchange="wlUpdateSet(${i},${j},'weight',this.value)"/><button class="wl-set-remove" onclick="wlRemoveSet(${i},${j})">✕</button></div>`;
+      });
+      h+=`<button class="wl-add-set" onclick="wlAddSet(${i})">+ Adicionar série</button></div>`;
+    });
+
+    // Add exercise input with suggestions
+    const filtered=wlSugQuery?wlSavedExercises.filter(e=>e.toLowerCase().includes(wlSugQuery)):[];
+    h+=`<div class="wl-suggestions"><div class="wl-add-exercise"><input id="wl-ex-input" placeholder="Nome do exercício..." oninput="wlShowSuggestions(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();wlAddExercise()}"/><button onclick="wlAddExercise()">Adicionar</button></div>`;
+    if(filtered.length>0){h+=`<div class="wl-sug-list">`;filtered.forEach(e=>{h+=`<div class="wl-sug-item" onclick="document.getElementById('wl-ex-input').value='${e}';wlSugQuery='';render()">${e}</div>`});h+=`</div>`}
+    h+=`</div>`;
+
+    if(wlExercises.length>0){h+=`<div class="wl-save-bar"><button class="btn-save" onclick="wlSave()">💾 Salvar Treino</button></div>`}
+  }else if(wlSubView==="history"){
+    if(wlHistory.length===0)h+=`<div class="wl-empty">Nenhum treino registrado ainda.</div>`;
+    wlHistory.forEach(w=>{
+      h+=`<div class="wl-history-item"><div class="wl-history-date">${fmtDateFull(w.date)}</div>`;
+      w.exercises.forEach(ex=>{
+        h+=`<div class="wl-history-ex"><span class="wl-history-ex-name">${ex.name}</span><div class="wl-history-sets">`;
+        ex.sets.forEach(s=>{h+=`<span style="margin-right:10px">Série ${s.set_number}: ${s.reps} reps × ${parseFloat(s.weight_kg)}kg</span>`});
+        h+=`</div></div>`;
+      });
+      h+=`</div>`;
+    });
+  }else if(wlSubView==="evolution"){
+    h+=`<div class="chart-select"><select onchange="loadEvolution(this.value)"><option value="">Selecione um exercício</option>`;
+    wlSavedExercises.forEach(e=>{h+=`<option value="${e}" ${e===wlChartExercise?"selected":""}>${e}</option>`});
+    h+=`</select></div>`;
+
+    if(wlChartExercise&&wlChartData.length>0){
+      h+=`<div class="chart-box"><div class="chart-title">Carga máxima (kg) — ${wlChartExercise}</div>${drawChart(wlChartData,"maxWeight","Peso","#a78bfa")}</div>`;
+      h+=`<div class="chart-box"><div class="chart-title">Volume total (kg × reps)</div>${drawChart(wlChartData,"totalVol","Volume","#22d3ee")}</div>`;
+      h+=`<div class="chart-box"><div class="chart-title">Repetições totais</div>${drawChart(wlChartData,"totalReps","Reps","#4ade80")}</div>`;
+    }else if(wlChartExercise){h+=`<div class="wl-empty">Nenhum dado encontrado para este exercício.</div>`}
+  }
   return h;
 }
 
 function render(){
   const R=document.getElementById("root");
-  if(!user){
-    R.innerHTML=`<div class="auth-box"><h1>TREINO TRACKER</h1><p>Acompanhe seus treinos, ano a ano</p><button class="btn-google" onclick="loginGoogle()">${GSVG} Entrar com Google</button></div>`;
-    return;
-  }
+  if(!user){R.innerHTML=`<div class="auth-box"><h1>TREINO TRACKER</h1><p>Acompanhe seus treinos, ano a ano</p><button class="btn-google" onclick="loginGoogle()">${GSVG} Entrar com Google</button></div>`;return}
 
   const now=new Date(),doy=dayOfYear(),totalDays=daysInYear(selYear);
   const tot=uniqueDays(),exp=Math.round((goal/totalDays)*doy),diff=tot-exp;
   const apx=doy>0?Math.round((tot/doy)*100):0;
   const name=user.user_metadata?.full_name||user.email;
-  const isCurYear=isCurrentYear();
-  const yearDone=selYear<now.getFullYear();
+  const isCY=isCurrentYear(),yd=selYear<now.getFullYear();
 
   let h=`<div class="topbar"><span class="topbar-user">${name}</span><button class="btn-sm" onclick="logout()">Sair</button></div>`;
+  h+=`<div class="year-nav"><button onclick="changeYear(-1)" ${selYear<=MIN_YEAR?"disabled":""}>‹</button><span class="year-label">${selYear}</span><button onclick="changeYear(1)" ${selYear>=MAX_YEAR?"disabled":""}>›</button></div>`;
+  if(!isCY)h+=`<div class="year-current" onclick="goCurrentYear()">← Voltar para ${now.getFullYear()}</div>`;
+  h+=`<div class="goal-wrap"><span>Meta:</span><input type="number" min="1" max="366" value="${goal}" onchange="setGoal(this.value)"/><span>de ${totalDays} dias</span></div>`;
 
-  // Year nav
-  h+=`<div class="year-nav">
-    <button onclick="changeYear(-1)" ${selYear<=MIN_YEAR?"disabled":""}>‹</button>
-    <span class="year-label">${selYear}</span>
-    <button onclick="changeYear(1)" ${selYear>=MAX_YEAR?"disabled":""}>›</button>
-  </div>`;
-  if(!isCurYear)h+=`<div class="year-current" onclick="goCurrentYear()">← Voltar para ${now.getFullYear()}</div>`;
-
-  h+=`<div class="goal-wrap"><span>Meta:</span><input type="number" min="1" max="366" value="${goal}" onchange="setGoal(this.value)" /><span>de ${totalDays} dias</span></div>`;
-
-  // Cards
-  const ritmLabel=yearDone?(diff>=0?"meta batida":"meta não batida"):(diff>=0?"adiantado":"atrasado");
-  const crds=[
-    {l:"Dias treinados",v:tot,s:`de ${goal}`,c:"#a78bfa"},
-    {l:yearDone?"Dias no ano":"Dias restantes",v:yearDone?totalDays:Math.max(0,totalDays-doy),s:yearDone?"total":"do ano",c:"#38bdf8"},
-    {l:"Ritmo",v:(diff>=0?"+":"")+diff,s:ritmLabel,c:diff>=0?"#4ade80":"#f87171"},
-    {l:"Aproveitamento",v:(yearDone?Math.round((tot/totalDays)*100):apx)+"%",s:yearDone?"do ano":"do ano até agora",c:"#facc15"}
-  ];
+  const rl=yd?(diff>=0?"meta batida":"meta não batida"):(diff>=0?"adiantado":"atrasado");
+  const crds=[{l:"Dias treinados",v:tot,s:`de ${goal}`,c:"#a78bfa"},{l:yd?"Dias no ano":"Dias restantes",v:yd?totalDays:Math.max(0,totalDays-doy),s:yd?"total":"do ano",c:"#38bdf8"},{l:"Ritmo",v:(diff>=0?"+":"")+diff,s:rl,c:diff>=0?"#4ade80":"#f87171"},{l:"Aproveitamento",v:(yd?Math.round((tot/totalDays)*100):apx)+"%",s:yd?"do ano":"do ano até agora",c:"#facc15"}];
   h+=`<div class="cards">${crds.map(c=>`<div class="card"><div class="card-label">${c.l}</div><div class="card-value" style="color:${c.c}">${c.v}</div><div class="card-sub">${c.s}</div></div>`).join("")}</div>`;
 
   const p1=Math.min(100,Math.round((tot/goal)*100)),p2=Math.min(100,Math.round((doy/totalDays)*100));
-  h+=`<div class="pbox">
-    <div class="prow"><span>Progresso da Meta</span><span>${tot}/${goal}</span></div>
-    <div class="bbg"><div class="bfill" style="width:${p1}%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
-    <div class="prow"><span>Progresso do Ano</span><span>${doy}/${totalDays}</span></div>
-    <div class="bbg"><div class="bfill" style="width:${p2}%;background:linear-gradient(90deg,#1e40af,#38bdf8)"></div></div>
-  </div>`;
+  h+=`<div class="pbox"><div class="prow"><span>Progresso da Meta</span><span>${tot}/${goal}</span></div><div class="bbg"><div class="bfill" style="width:${p1}%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div><div class="prow"><span>Progresso do Ano</span><span>${doy}/${totalDays}</span></div><div class="bbg"><div class="bfill" style="width:${p2}%;background:linear-gradient(90deg,#1e40af,#38bdf8)"></div></div></div>`;
 
-  h+=`<div class="nav">
-    <button class="${view==="calendar"?"on":"off"}" onclick="view='calendar';render()">Calendário</button>
-    <button class="${view==="stats"?"on":"off"}" onclick="view='stats';render()">Estatísticas</button>
-    <button class="${view==="types"?"on":"off"}" onclick="view='types';render()">Por Tipo</button>
-  </div>`;
+  h+=`<div class="nav"><button class="${view==="calendar"?"on":"off"}" onclick="view='calendar';render()">Calendário</button><button class="${view==="stats"?"on":"off"}" onclick="view='stats';render()">Estatísticas</button><button class="${view==="types"?"on":"off"}" onclick="view='types';render()">Por Tipo</button><button class="${view==="workout"?"on":"off"}" onclick="view='workout';wlSubView='log';loadWorkoutForDate()">🏋️ Musculação</button></div>`;
 
   if(view==="calendar"){
-    const usedTypes=new Set(yearEntries().map(e=>e.type));
-    if(usedTypes.size>0){
-      h+=`<div class="legend">`;
-      for(const t of usedTypes){const ty=TYPES[t];if(ty)h+=`<div class="legend-item"><div class="legend-dot" style="background:${ty.color}"></div>${ty.name}</div>`}
-      h+=`</div>`;
-    }
+    const ut=new Set(yearEntries().map(e=>e.type));
+    if(ut.size>0){h+=`<div class="legend">`;for(const t of ut){const ty=TYPES[t];if(ty)h+=`<div class="legend-item"><div class="legend-dot" style="background:${ty.color}"></div>${ty.name}</div>`}h+=`</div>`}
     h+=`<div class="mgrid">`;
     for(let m=0;m<12;m++){
-      const di=dim(selYear,m),f=fdow(selYear,m),tr=monthDays(m);
-      const pct=Math.round((tr/di)*100);
-      const isCurMonth=isCurYear&&now.getMonth()===m,td=now.getDate();
+      const di=dim(selYear,m),f=fdow(selYear,m),tr=monthDays(m),pct=Math.round((tr/di)*100);
+      const isCM=isCY&&now.getMonth()===m,td=now.getDate();
       h+=`<div class="mbox"><div class="mhead"><span class="mname">${MN[m]}</span><span class="mbadge" style="background:${pbg(pct)};color:${pcl(pct)}">${tr}/${di} · ${pct}%</span></div>`;
       h+=`<div class="dwh">${DW.map(d=>`<span>${d}</span>`).join("")}</div><div class="dgrid">`;
       for(let i=0;i<f;i++)h+=`<div class="dcell"><div class="dnum empty"></div></div>`;
-      for(let d=1;d<=di;d++){
-        const date=ds(selYear,m,d),types=dayTypes(date),has=types.length>0;
-        const isT=isCurMonth&&d===td;
+      for(let d=1;d<=di;d++){const date=ds(selYear,m,d),types=dayTypes(date),has=types.length>0,isT=isCM&&d===td;
         h+=`<div class="dcell" onclick="openModal(${m},${d})"><div class="dnum ${has?"tr":"notr"} ${isT?"today":""}">${d}</div>`;
         if(has){h+=`<div class="dots">`;for(const t of types.slice(0,4)){const ty=TYPES[t];if(ty)h+=`<div class="dot" style="background:${ty.color}"></div>`}h+=`</div>`}
-        h+=`</div>`;
-      }
-      h+=`</div></div>`;
-    }
+        h+=`</div>`}
+      h+=`</div></div>`}
     h+=`</div>`;
   }else if(view==="stats"){
     h+=`<div class="slist">`;
-    for(let m=0;m<12;m++){
-      const di=dim(selYear,m),tr=monthDays(m),pct=Math.round((tr/di)*100),isCur=isCurYear&&now.getMonth()===m;
-      h+=`<div class="sr ${isCur?"cur":""}"><span class="sn">${MN[m]}</span><div class="sbbg"><div class="sbf" style="width:${pct}%;background:${bg(pct)}"></div></div><span class="sp ${pc(pct)}">${pct}%</span><span class="sc">${tr}/${di}</span></div>`;
-    }
+    for(let m=0;m<12;m++){const di=dim(selYear,m),tr=monthDays(m),pct=Math.round((tr/di)*100),isCur=isCY&&now.getMonth()===m;
+      h+=`<div class="sr ${isCur?"cur":""}"><span class="sn">${MN[m]}</span><div class="sbbg"><div class="sbf" style="width:${pct}%;background:${bg(pct)}"></div></div><span class="sp ${pc(pct)}">${pct}%</span><span class="sc">${tr}/${di}</span></div>`}
     h+=`</div>`;
   }else if(view==="types"){
-    const ye=yearEntries(),counts={};
-    ye.forEach(e=>{counts[e.type]=(counts[e.type]||0)+1});
+    const ye=yearEntries(),counts={};ye.forEach(e=>{counts[e.type]=(counts[e.type]||0)+1});
     const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
-    const tot2=uniqueDays();
-
     h+=`<div class="type-stats">`;
     for(const[k,c]of sorted){const t=TYPES[k];if(!t)continue;h+=`<div class="ts-card"><div class="ts-icon">${t.icon}</div><div class="ts-info"><div class="ts-name">${t.name}</div><div class="ts-val" style="color:${t.color}">${c}</div></div></div>`}
     if(sorted.length===0)h+=`<div style="text-align:center;color:#64748b;grid-column:1/-1;padding:40px">Nenhum treino registrado em ${selYear}</div>`;
     h+=`</div>`;
-
-    if(sorted.length>0){
-      h+=`<div style="margin-top:10px">`;
-      for(const[k,c]of sorted){
-        const t=TYPES[k];if(!t)continue;
-        const pct=tot2>0?Math.min(100,Math.round((c/tot2)*100)):0;
-        h+=`<div class="sr" style="margin-bottom:8px"><span style="font-size:18px;width:30px;text-align:center">${t.icon}</span><span class="sn">${t.name}</span><div class="sbbg"><div class="sbf" style="width:${pct}%;background:${t.color}"></div></div><span class="sp" style="color:${t.color}">${c}x</span></div>`;
-      }
-      h+=`</div>`;
-    }
+    if(sorted.length>0){h+=`<div style="margin-top:10px">`;for(const[k,c]of sorted){const t=TYPES[k];if(!t)continue;const pct=tot>0?Math.min(100,Math.round((c/tot)*100)):0;h+=`<div class="sr" style="margin-bottom:8px"><span style="font-size:18px;width:30px;text-align:center">${t.icon}</span><span class="sn">${t.name}</span><div class="sbbg"><div class="sbf" style="width:${pct}%;background:${t.color}"></div></div><span class="sp" style="color:${t.color}">${c}x</span></div>`}h+=`</div>`}
+  }else if(view==="workout"){
+    h+=renderWorkoutLog();
   }
 
-  h+=`<p class="footer">Toque no dia para registrar treinos · Sincronizado na nuvem</p>`;
+  h+=`<p class="footer">Toque no dia para registrar · Sincronizado na nuvem</p>`;
   h+=renderModal();
   R.innerHTML=h;
 }
@@ -362,10 +466,7 @@ function render(){
 (async()=>{
   const{data:{session}}=await sb.auth.getSession();
   if(session){user=session.user;await loadData()}else render();
-  sb.auth.onAuthStateChange(async(ev,session)=>{
-    if(ev==="SIGNED_IN"&&session){user=session.user;await loadData()}
-    else if(ev==="SIGNED_OUT"){user=null;entries=[];goal=350;render()}
-  });
+  sb.auth.onAuthStateChange(async(ev,s)=>{if(ev==="SIGNED_IN"&&s){user=s.user;await loadData()}else if(ev==="SIGNED_OUT"){user=null;entries=[];goal=350;render()}});
 })();
 </script>
 </body>
