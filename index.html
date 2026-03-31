@@ -156,14 +156,66 @@ let user=null,goal=350,entries=[],view="calendar",modal=null,modalSel=new Set();
 let selYear=new Date().getFullYear();
 const MIN_YEAR=2024,MAX_YEAR=2030;
 
+// Exercise catalog
+const EX_CATALOG={
+  "Peito":[
+    {name:"Supino Reto",icon:"🔷"},{name:"Supino Inclinado",icon:"🔷"},{name:"Supino Declinado",icon:"🔷"},
+    {name:"Supino com Halteres",icon:"🔷"},{name:"Crucifixo",icon:"🔷"},{name:"Crucifixo Inclinado",icon:"🔷"},
+    {name:"Crossover",icon:"🔷"},{name:"Fly na Máquina",icon:"🔷"},{name:"Flexão de Braço",icon:"🔷"},
+    {name:"Pullover",icon:"🔷"}
+  ],
+  "Costas":[
+    {name:"Puxada Frontal",icon:"🟦"},{name:"Puxada Triângulo",icon:"🟦"},{name:"Remada Curvada",icon:"🟦"},
+    {name:"Remada Unilateral",icon:"🟦"},{name:"Remada Cavalinho",icon:"🟦"},{name:"Remada Baixa",icon:"🟦"},
+    {name:"Barra Fixa",icon:"🟦"},{name:"Pulldown",icon:"🟦"},{name:"Levantamento Terra",icon:"🟦"},
+    {name:"Good Morning",icon:"🟦"}
+  ],
+  "Ombros":[
+    {name:"Desenvolvimento Militar",icon:"🟠"},{name:"Desenvolvimento com Halteres",icon:"🟠"},
+    {name:"Elevação Lateral",icon:"🟠"},{name:"Elevação Frontal",icon:"🟠"},
+    {name:"Crucifixo Inverso",icon:"🟠"},{name:"Encolhimento",icon:"🟠"},
+    {name:"Face Pull",icon:"🟠"},{name:"Arnold Press",icon:"🟠"}
+  ],
+  "Bíceps":[
+    {name:"Rosca Direta",icon:"💪"},{name:"Rosca Alternada",icon:"💪"},{name:"Rosca Martelo",icon:"💪"},
+    {name:"Rosca Scott",icon:"💪"},{name:"Rosca Concentrada",icon:"💪"},{name:"Rosca no Cabo",icon:"💪"},
+    {name:"Rosca Inversa",icon:"💪"}
+  ],
+  "Tríceps":[
+    {name:"Tríceps Pulley",icon:"🔶"},{name:"Tríceps Testa",icon:"🔶"},{name:"Tríceps Francês",icon:"🔶"},
+    {name:"Tríceps Corda",icon:"🔶"},{name:"Tríceps Banco",icon:"🔶"},{name:"Tríceps Coice",icon:"🔶"},
+    {name:"Mergulho",icon:"🔶"}
+  ],
+  "Pernas":[
+    {name:"Agachamento Livre",icon:"🦵"},{name:"Agachamento Smith",icon:"🦵"},{name:"Agachamento Frontal",icon:"🦵"},
+    {name:"Leg Press 45°",icon:"🦵"},{name:"Leg Press Horizontal",icon:"🦵"},
+    {name:"Cadeira Extensora",icon:"🦵"},{name:"Mesa Flexora",icon:"🦵"},{name:"Cadeira Flexora",icon:"🦵"},
+    {name:"Cadeira Adutora",icon:"🦵"},{name:"Cadeira Abdutora",icon:"🦵"},
+    {name:"Stiff",icon:"🦵"},{name:"Avanço / Passada",icon:"🦵"},{name:"Búlgaro",icon:"🦵"},
+    {name:"Hack Squat",icon:"🦵"},{name:"Agachamento Sumô",icon:"🦵"}
+  ],
+  "Panturrilha":[
+    {name:"Panturrilha em Pé",icon:"🦶"},{name:"Panturrilha Sentado",icon:"🦶"},
+    {name:"Panturrilha no Leg Press",icon:"🦶"},{name:"Panturrilha no Smith",icon:"🦶"}
+  ],
+  "Abdômen":[
+    {name:"Abdominal Crunch",icon:"🟡"},{name:"Abdominal Infra",icon:"🟡"},
+    {name:"Prancha",icon:"🟡"},{name:"Prancha Lateral",icon:"🟡"},
+    {name:"Abdominal na Máquina",icon:"🟡"},{name:"Abdominal no Cabo",icon:"🟡"},
+    {name:"Elevação de Pernas",icon:"🟡"},{name:"Russian Twist",icon:"🟡"}
+  ]
+};
+const ALL_CATALOG_NAMES=Object.values(EX_CATALOG).flat().map(e=>e.name);
+let wlShowCatalog=false;
+
 // Workout state
 let wlDate=new Date().toISOString().slice(0,10);
-let wlExercises=[];// [{name,sets:[{reps,weight}]}]
+let wlExercises=[];
 let wlLogId=null;
 let wlSavedExercises=[];
 let wlSugQuery="";
 let wlHistory=[];
-let wlSubView="log"; // log, history, evolution
+let wlSubView="log";
 let wlChartExercise="";
 let wlChartData=[];
 
@@ -240,8 +292,13 @@ function wlAddExercise(){
   const input=document.getElementById("wl-ex-input");if(!input)return;
   const name=input.value.trim();if(!name)return;
   wlExercises.push({name,sets:[{reps:12,weight:0}]});
-  wlSugQuery="";input.value="";render();
+  wlSugQuery="";input.value="";wlShowCatalog=false;render();
 }
+function wlAddFromCatalog(name){
+  wlExercises.push({name,sets:[{reps:12,weight:0}]});
+  wlShowCatalog=false;render();
+}
+function wlToggleCatalog(){wlShowCatalog=!wlShowCatalog;render()}
 
 function wlRemoveExercise(i){wlExercises.splice(i,1);render()}
 function wlAddSet(i){wlExercises[i].sets.push({reps:12,weight:0});render()}
@@ -370,10 +427,29 @@ function renderWorkoutLog(){
     });
 
     // Add exercise input with suggestions
-    const filtered=wlSugQuery?wlSavedExercises.filter(e=>e.toLowerCase().includes(wlSugQuery)):[];
-    h+=`<div class="wl-suggestions"><div class="wl-add-exercise"><input id="wl-ex-input" placeholder="Nome do exercício..." oninput="wlShowSuggestions(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();wlAddExercise()}"/><button onclick="wlAddExercise()">Adicionar</button></div>`;
-    if(filtered.length>0){h+=`<div class="wl-sug-list">`;filtered.forEach(e=>{h+=`<div class="wl-sug-item" onclick="document.getElementById('wl-ex-input').value='${e}';wlSugQuery='';render()">${e}</div>`});h+=`</div>`}
+    const filtered=wlSugQuery?[...new Set([...wlSavedExercises,...ALL_CATALOG_NAMES])].filter(e=>e.toLowerCase().includes(wlSugQuery)):[];
+    h+=`<div class="wl-suggestions"><div class="wl-add-exercise"><input id="wl-ex-input" placeholder="Nome do exercício..." oninput="wlShowCatalog=false;wlShowSuggestions(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();wlAddExercise()}"/><button onclick="wlAddExercise()">Adicionar</button></div>`;
+    if(filtered.length>0&&!wlShowCatalog){h+=`<div class="wl-sug-list">`;filtered.slice(0,8).forEach(e=>{h+=`<div class="wl-sug-item" onclick="document.getElementById('wl-ex-input').value='${e}';wlSugQuery='';render()">${e}</div>`});h+=`</div>`}
     h+=`</div>`;
+    
+    // Catalog button
+    h+=`<button style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:#a78bfa;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px" onclick="wlToggleCatalog()">${wlShowCatalog?"▲ Fechar catálogo":"▼ Escolher do catálogo de exercícios"}</button>`;
+
+    // Catalog grid
+    if(wlShowCatalog){
+      h+=`<div style="margin-top:12px">`;
+      const added=new Set(wlExercises.map(e=>e.name));
+      for(const[group,exs]of Object.entries(EX_CATALOG)){
+        h+=`<div style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px">${group}</div>`;
+        h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">`;
+        exs.forEach(ex=>{
+          const isAdded=added.has(ex.name);
+          h+=`<div onclick="${isAdded?"":"wlAddFromCatalog('"+ex.name+"')"}" style="display:flex;align-items:center;gap:8px;padding:10px;border-radius:10px;border:1px solid ${isAdded?"rgba(167,139,250,0.3)":"rgba(255,255,255,0.06)"};background:${isAdded?"rgba(167,139,250,0.1)":"rgba(255,255,255,0.02)"};cursor:${isAdded?"default":"pointer"};font-size:12px;color:${isAdded?"#a78bfa":"#94a3b8"}"><span>${ex.icon}</span><span>${ex.name}</span>${isAdded?'<span style="margin-left:auto;font-size:10px">✓</span>':""}</div>`;
+        });
+        h+=`</div>`;
+      }
+      h+=`</div>`;
+    }
 
     if(wlExercises.length>0){h+=`<div class="wl-save-bar"><button class="btn-save" onclick="wlSave()">💾 Salvar Treino</button></div>`}
   }else if(wlSubView==="history"){
