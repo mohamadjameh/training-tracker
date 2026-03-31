@@ -181,7 +181,7 @@ let user=null,goal=350,entries=[],allDates=[],view="calendar",modal=null,modalSe
 let selYear=new Date().getFullYear();const MIN_Y=2024,MAX_Y=2030;
 // Workout plan state
 let plans=[],wlView="plans",editPlan=null,execPlan=null,execSets=[],execDate=new Date().toISOString().slice(0,10),execLastData={};
-let wlHistory=[],wlChartEx="",wlChartData=[],wlSavedEx=[];
+let wlSavedEx=[],viewPlan=null,viewPlanEvo={};
 let addExQuery="",showCatalog=false;
 let compYear=null,compData=[];
 
@@ -313,26 +313,40 @@ async function saveExec(){
   for(const ex of execSets){for(let s=0;s<ex.sets.length;s++){rows.push({workout_log_id:log.id,exercise_name:ex.name,set_number:s+1,reps:ex.sets[s].reps,weight_kg:ex.sets[s].weight})}}
   if(rows.length)await sb.from("exercise_sets").insert(rows);
   alert("Treino salvo!");
-  await loadPlans();wlView="plans";render();
+  await loadPlans();await openViewPlan(execPlan.id);
 }
 
-// History & Evolution
-async function loadHistory(){
-  const{data:logs}=await sb.from("workout_logs").select("id,date,plan_id").eq("user_id",user.id).order("date",{ascending:false}).limit(20);
-  if(!logs||!logs.length){wlHistory=[];render();return}
+// Load evolution for all exercises in a plan
+async function loadPlanEvolution(planId){
+  const plan=plans.find(p=>p.id===planId);if(!plan){viewPlanEvo={};return}
+  // Get all logs for this plan
+  const{data:logs}=await sb.from("workout_logs").select("id,date").eq("user_id",user.id).eq("plan_id",planId).order("date");
+  if(!logs||!logs.length){viewPlanEvo={};return}
   const ids=logs.map(l=>l.id);
-  const{data:sets}=await sb.from("exercise_sets").select("workout_log_id,exercise_name,set_number,reps,weight_kg").in("workout_log_id",ids).order("set_number");
-  wlHistory=logs.map(l=>{const es=(sets||[]).filter(s=>s.workout_log_id===l.id);const em={};es.forEach(s=>{if(!em[s.exercise_name])em[s.exercise_name]=[];em[s.exercise_name].push(s)});const plan=plans.find(p=>p.id===l.plan_id);return{date:l.date,planName:plan?plan.name:null,exercises:Object.entries(em).map(([n,ss])=>({name:n,sets:ss}))}});render()
+  const{data:sets}=await sb.from("exercise_sets").select("workout_log_id,exercise_name,reps,weight_kg,set_number").in("workout_log_id",ids);
+  const lm={};logs.forEach(l=>lm[l.id]=l.date);
+  // Group by exercise
+  const byEx={};
+  (sets||[]).forEach(s=>{
+    const d=lm[s.workout_log_id];if(!d)return;
+    if(!byEx[s.exercise_name])byEx[s.exercise_name]={};
+    if(!byEx[s.exercise_name][d])byEx[s.exercise_name][d]={maxWeight:0,totalVol:0,totalReps:0,sets:[]};
+    const w=parseFloat(s.weight_kg);
+    byEx[s.exercise_name][d].maxWeight=Math.max(byEx[s.exercise_name][d].maxWeight,w);
+    byEx[s.exercise_name][d].totalVol+=w*s.reps;
+    byEx[s.exercise_name][d].totalReps+=s.reps;
+    byEx[s.exercise_name][d].sets.push({n:s.set_number,reps:s.reps,weight:w});
+  });
+  viewPlanEvo={};
+  for(const[ex,dates]of Object.entries(byEx)){
+    viewPlanEvo[ex]=Object.entries(dates).map(([d,v])=>({date:d,...v})).sort((a,b)=>a.date.localeCompare(b.date));
+  }
 }
-async function loadEvolution(ex){
-  if(!ex){wlChartData=[];render();return}wlChartEx=ex;
-  const{data:logs}=await sb.from("workout_logs").select("id,date").eq("user_id",user.id).order("date");
-  if(!logs||!logs.length){wlChartData=[];render();return}
-  const ids=logs.map(l=>l.id);
-  const{data:sets}=await sb.from("exercise_sets").select("workout_log_id,reps,weight_kg").in("workout_log_id",ids).eq("exercise_name",ex);
-  const lm={};logs.forEach(l=>lm[l.id]=l.date);const bd={};
-  (sets||[]).forEach(s=>{const d=lm[s.workout_log_id];if(!d)return;if(!bd[d])bd[d]={maxWeight:0,totalVol:0,totalReps:0};const w=parseFloat(s.weight_kg);bd[d].maxWeight=Math.max(bd[d].maxWeight,w);bd[d].totalVol+=w*s.reps;bd[d].totalReps+=s.reps});
-  wlChartData=Object.entries(bd).map(([d,v])=>({date:d,...v})).sort((a,b)=>a.date.localeCompare(b.date));render()
+
+async function openViewPlan(id){
+  viewPlan=plans.find(p=>p.id===id);
+  await loadPlanEvolution(id);
+  wlView="view";render();
 }
 
 function drawChart(data,key,color,w=320,h=160){
