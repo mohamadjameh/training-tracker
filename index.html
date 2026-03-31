@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-<title>Treino 2026</title>
+<title>Treino Tracker</title>
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="theme-color" content="#0f172a" />
@@ -23,6 +23,16 @@
   .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .topbar-user{font-size:12px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
   .btn-sm{padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:rgba(255,255,255,0.05);color:#94a3b8}
+
+  /* Year nav */
+  .year-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin:4px 0}
+  .year-nav button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+  .year-nav button:hover{background:rgba(255,255,255,0.1)}
+  .year-nav button:disabled{opacity:0.2;cursor:not-allowed}
+  .year-label{font-size:28px;font-weight:800;background:linear-gradient(135deg,#7c3aed,#a78bfa,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent;min-width:80px;text-align:center}
+  .year-current{font-size:11px;color:#64748b;text-align:center;margin-top:2px;cursor:pointer}
+  .year-current:hover{color:#a78bfa}
+
   .subtitle{text-align:center;font-size:13px;color:#64748b;margin-top:4px}
   .goal-wrap{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px}
   .goal-wrap input{width:56px;padding:4px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#e2e8f0;font-size:15px;text-align:center;font-weight:700;outline:none}
@@ -64,7 +74,6 @@
   .dots{display:flex;gap:2px;height:6px;align-items:center;justify-content:center}
   .dot{width:5px;height:5px;border-radius:50%}
 
-  /* Modal */
   .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
   .modal{background:#1e293b;border-radius:20px;padding:24px;max-width:360px;width:100%;border:1px solid rgba(255,255,255,0.1);max-height:80vh;overflow-y:auto}
   .modal h3{font-size:18px;font-weight:700;margin-bottom:4px}
@@ -80,7 +89,6 @@
   .btn-save{background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff}
   .btn-cancel{background:rgba(255,255,255,0.05);color:#94a3b8}
 
-  /* Stats */
   .slist{display:grid;gap:8px}
   .sr{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);border-radius:12px;padding:12px 16px;border:1px solid rgba(255,255,255,0.06)}
   .sr.cur{border-color:rgba(167,139,250,0.3)}
@@ -90,7 +98,6 @@
   .sp{font-size:13px;font-weight:700;width:42px;text-align:right}
   .sc{font-size:12px;color:#64748b;width:48px;text-align:right}
 
-  /* Type stats */
   .type-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:20px}
   .ts-card{background:rgba(255,255,255,0.03);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px}
   .ts-icon{font-size:24px}
@@ -115,7 +122,6 @@ const SKEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 const SITE="https://training-tracker-kohl.vercel.app/";
 const sb=supabase.createClient(SURL,SKEY);
 
-const Y=2026;
 const MN=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DW=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
@@ -145,20 +151,39 @@ const TYPES={
 };
 
 let user=null,goal=350,entries=[],view="calendar",modal=null,modalSel=new Set();
+let selYear=new Date().getFullYear();
+const MIN_YEAR=2024,MAX_YEAR=2030;
 
-function dim(m){return new Date(Y,m+1,0).getDate()}
-function fdow(m){return new Date(Y,m,1).getDay()}
-function ds(m,d){return`${Y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
+function isLeap(y){return(y%4===0&&y%100!==0)||y%400===0}
+function daysInYear(y){return isLeap(y)?366:365}
+function dim(y,m){return new Date(y,m+1,0).getDate()}
+function fdow(y,m){return new Date(y,m,1).getDay()}
+function ds(y,m,d){return`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
+function yearEntries(){return entries.filter(e=>e.date.startsWith(selYear+"-"))}
 function dayTypes(dateStr){return entries.filter(e=>e.date===dateStr).map(e=>e.type)}
-function uniqueDays(){return new Set(entries.map(e=>e.date)).size}
-function monthDays(m){const pre=ds(m,1),suf=ds(m,dim(m));return new Set(entries.filter(e=>e.date>=pre&&e.date<=suf).map(e=>e.date)).size}
+function uniqueDays(){return new Set(yearEntries().map(e=>e.date)).size}
+function monthDays(m){const pre=ds(selYear,m,1),suf=ds(selYear,m,dim(selYear,m));return new Set(entries.filter(e=>e.date>=pre&&e.date<=suf).map(e=>e.date)).size}
 
 function pcl(p){return p>=90?"#4ade80":p>=70?"#facc15":"#f87171"}
 function pbg(p){return p>=90?"rgba(34,197,94,0.15)":p>=70?"rgba(250,204,21,0.15)":"rgba(239,68,68,0.15)"}
 function bg(p){return p>=90?"linear-gradient(90deg,#22c55e,#4ade80)":p>=70?"linear-gradient(90deg,#eab308,#facc15)":"linear-gradient(90deg,#ef4444,#f87171)"}
 function pc(p){return p>=90?"g":p>=70?"y":"r"}
 
+function isCurrentYear(){return selYear===new Date().getFullYear()}
+function dayOfYear(){
+  const now=new Date();
+  if(selYear<now.getFullYear())return daysInYear(selYear);
+  if(selYear>now.getFullYear())return 0;
+  return Math.floor((now-new Date(selYear,0,0))/864e5);
+}
+
 const GSVG=`<svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>`;
+
+function changeYear(delta){
+  const ny=selYear+delta;
+  if(ny>=MIN_YEAR&&ny<=MAX_YEAR){selYear=ny;loadData()}
+}
+function goCurrentYear(){selYear=new Date().getFullYear();loadData()}
 
 async function loginGoogle(){await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:SITE}})}
 async function logout(){await sb.auth.signOut();user=null;entries=[];goal=350;render()}
@@ -166,13 +191,14 @@ async function logout(){await sb.auth.signOut();user=null;entries=[];goal=350;re
 async function loadData(){
   const{data:p}=await sb.from("profiles").select("goal").eq("id",user.id).single();
   if(p){goal=p.goal}else{await sb.from("profiles").insert({id:user.id,goal:350});goal=350}
-  const{data:d}=await sb.from("training_days").select("date,type").eq("user_id",user.id);
+  const startDate=`${selYear}-01-01`,endDate=`${selYear}-12-31`;
+  const{data:d}=await sb.from("training_days").select("date,type").eq("user_id",user.id).gte("date",startDate).lte("date",endDate);
   entries=d||[];
   render();
 }
 
 function openModal(m,d){
-  const date=ds(m,d);
+  const date=ds(selYear,m,d);
   modal={m,d,date};
   modalSel=new Set(dayTypes(date));
   render();
@@ -189,7 +215,6 @@ async function saveModal(){
   const existing=dayTypes(date);
   const toAdd=[...modalSel].filter(t=>!existing.includes(t));
   const toRemove=existing.filter(t=>!modalSel.has(t));
-
   for(const t of toRemove){
     await sb.from("training_days").delete().eq("user_id",user.id).eq("date",date).eq("type",t);
     entries=entries.filter(e=>!(e.date===date&&e.type===t));
@@ -204,63 +229,68 @@ async function saveModal(){
 function closeModal(){modal=null;render()}
 
 async function setGoal(v){
-  const n=parseInt(v);if(isNaN(n)||n<1||n>365)return;
+  const n=parseInt(v);if(isNaN(n)||n<1||n>366)return;
   goal=n;await sb.from("profiles").update({goal:n}).eq("id",user.id);render();
 }
 
 function renderModal(){
   if(!modal)return"";
   const d=new Date(modal.date+"T12:00:00");
-  const dateLabel=`${d.getDate()} de ${MN[d.getMonth()]}`;
+  const dateLabel=`${d.getDate()} de ${MN[d.getMonth()]} de ${selYear}`;
   const cats={};
   Object.entries(TYPES).forEach(([k,v])=>{if(!cats[v.cat])cats[v.cat]=[];cats[v.cat].push(k)});
-
   let h=`<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal">`;
   h+=`<h3>Registrar Treino</h3><div class="modal-date">${dateLabel}</div>`;
-
   for(const[cat,keys]of Object.entries(cats)){
     h+=`<div class="modal-cat">${cat}</div><div class="modal-types">`;
-    for(const k of keys){
-      const t=TYPES[k],sel=modalSel.has(k);
-      h+=`<div class="type-btn ${sel?"sel":""}" style="--tc:${t.color}" onclick="toggleType('${k}')"><span class="type-icon">${t.icon}</span>${t.name}</div>`;
-    }
+    for(const k of keys){const t=TYPES[k],sel=modalSel.has(k);h+=`<div class="type-btn ${sel?"sel":""}" style="--tc:${t.color}" onclick="toggleType('${k}')"><span class="type-icon">${t.icon}</span>${t.name}</div>`}
     h+=`</div>`;
   }
-
-  h+=`<div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveModal()">Salvar</button></div>`;
-  h+=`</div></div>`;
+  h+=`<div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" onclick="saveModal()">Salvar</button></div></div></div>`;
   return h;
 }
 
 function render(){
   const R=document.getElementById("root");
   if(!user){
-    R.innerHTML=`<div class="auth-box"><h1>TREINO ${Y}</h1><p>Acompanhe seus treinos durante o ano</p><button class="btn-google" onclick="loginGoogle()">${GSVG} Entrar com Google</button></div>`;
+    R.innerHTML=`<div class="auth-box"><h1>TREINO TRACKER</h1><p>Acompanhe seus treinos, ano a ano</p><button class="btn-google" onclick="loginGoogle()">${GSVG} Entrar com Google</button></div>`;
     return;
   }
 
-  const now=new Date(),doy=Math.floor((now-new Date(Y,0,0))/864e5);
-  const tot=uniqueDays(),exp=Math.round((goal/365)*doy),diff=tot-exp;
+  const now=new Date(),doy=dayOfYear(),totalDays=daysInYear(selYear);
+  const tot=uniqueDays(),exp=Math.round((goal/totalDays)*doy),diff=tot-exp;
   const apx=doy>0?Math.round((tot/doy)*100):0;
   const name=user.user_metadata?.full_name||user.email;
+  const isCurYear=isCurrentYear();
+  const yearDone=selYear<now.getFullYear();
 
   let h=`<div class="topbar"><span class="topbar-user">${name}</span><button class="btn-sm" onclick="logout()">Sair</button></div>`;
-  h+=`<h1>TREINO ${Y}</h1>`;
-  h+=`<div class="goal-wrap"><span>Meta:</span><input type="number" min="1" max="365" value="${goal}" onchange="setGoal(this.value)" /><span>de 365 dias</span></div>`;
 
+  // Year nav
+  h+=`<div class="year-nav">
+    <button onclick="changeYear(-1)" ${selYear<=MIN_YEAR?"disabled":""}>‹</button>
+    <span class="year-label">${selYear}</span>
+    <button onclick="changeYear(1)" ${selYear>=MAX_YEAR?"disabled":""}>›</button>
+  </div>`;
+  if(!isCurYear)h+=`<div class="year-current" onclick="goCurrentYear()">← Voltar para ${now.getFullYear()}</div>`;
+
+  h+=`<div class="goal-wrap"><span>Meta:</span><input type="number" min="1" max="366" value="${goal}" onchange="setGoal(this.value)" /><span>de ${totalDays} dias</span></div>`;
+
+  // Cards
+  const ritmLabel=yearDone?(diff>=0?"meta batida":"meta não batida"):(diff>=0?"adiantado":"atrasado");
   const crds=[
     {l:"Dias treinados",v:tot,s:`de ${goal}`,c:"#a78bfa"},
-    {l:"Dias restantes",v:Math.max(0,365-doy),s:"do ano",c:"#38bdf8"},
-    {l:"Ritmo",v:(diff>=0?"+":"")+diff,s:diff>=0?"adiantado":"atrasado",c:diff>=0?"#4ade80":"#f87171"},
-    {l:"Aproveitamento",v:apx+"%",s:"do ano até agora",c:"#facc15"}
+    {l:yearDone?"Dias no ano":"Dias restantes",v:yearDone?totalDays:Math.max(0,totalDays-doy),s:yearDone?"total":"do ano",c:"#38bdf8"},
+    {l:"Ritmo",v:(diff>=0?"+":"")+diff,s:ritmLabel,c:diff>=0?"#4ade80":"#f87171"},
+    {l:"Aproveitamento",v:(yearDone?Math.round((tot/totalDays)*100):apx)+"%",s:yearDone?"do ano":"do ano até agora",c:"#facc15"}
   ];
   h+=`<div class="cards">${crds.map(c=>`<div class="card"><div class="card-label">${c.l}</div><div class="card-value" style="color:${c.c}">${c.v}</div><div class="card-sub">${c.s}</div></div>`).join("")}</div>`;
 
-  const p1=Math.min(100,Math.round((tot/goal)*100)),p2=Math.min(100,Math.round((doy/365)*100));
+  const p1=Math.min(100,Math.round((tot/goal)*100)),p2=Math.min(100,Math.round((doy/totalDays)*100));
   h+=`<div class="pbox">
     <div class="prow"><span>Progresso da Meta</span><span>${tot}/${goal}</span></div>
     <div class="bbg"><div class="bfill" style="width:${p1}%;background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
-    <div class="prow"><span>Progresso do Ano</span><span>${doy}/365</span></div>
+    <div class="prow"><span>Progresso do Ano</span><span>${doy}/${totalDays}</span></div>
     <div class="bbg"><div class="bfill" style="width:${p2}%;background:linear-gradient(90deg,#1e40af,#38bdf8)"></div></div>
   </div>`;
 
@@ -271,31 +301,25 @@ function render(){
   </div>`;
 
   if(view==="calendar"){
-    // Legend
-    const usedTypes=new Set(entries.map(e=>e.type));
+    const usedTypes=new Set(yearEntries().map(e=>e.type));
     if(usedTypes.size>0){
       h+=`<div class="legend">`;
       for(const t of usedTypes){const ty=TYPES[t];if(ty)h+=`<div class="legend-item"><div class="legend-dot" style="background:${ty.color}"></div>${ty.name}</div>`}
       h+=`</div>`;
     }
-
     h+=`<div class="mgrid">`;
     for(let m=0;m<12;m++){
-      const di=dim(m),f=fdow(m),tr=monthDays(m);
+      const di=dim(selYear,m),f=fdow(selYear,m),tr=monthDays(m);
       const pct=Math.round((tr/di)*100);
-      const isCur=now.getFullYear()===Y&&now.getMonth()===m,td=now.getDate();
+      const isCurMonth=isCurYear&&now.getMonth()===m,td=now.getDate();
       h+=`<div class="mbox"><div class="mhead"><span class="mname">${MN[m]}</span><span class="mbadge" style="background:${pbg(pct)};color:${pcl(pct)}">${tr}/${di} · ${pct}%</span></div>`;
       h+=`<div class="dwh">${DW.map(d=>`<span>${d}</span>`).join("")}</div><div class="dgrid">`;
       for(let i=0;i<f;i++)h+=`<div class="dcell"><div class="dnum empty"></div></div>`;
       for(let d=1;d<=di;d++){
-        const date=ds(m,d),types=dayTypes(date),has=types.length>0;
-        const isT=isCur&&d===td;
+        const date=ds(selYear,m,d),types=dayTypes(date),has=types.length>0;
+        const isT=isCurMonth&&d===td;
         h+=`<div class="dcell" onclick="openModal(${m},${d})"><div class="dnum ${has?"tr":"notr"} ${isT?"today":""}">${d}</div>`;
-        if(has){
-          h+=`<div class="dots">`;
-          for(const t of types.slice(0,4)){const ty=TYPES[t];if(ty)h+=`<div class="dot" style="background:${ty.color}"></div>`}
-          h+=`</div>`;
-        }
+        if(has){h+=`<div class="dots">`;for(const t of types.slice(0,4)){const ty=TYPES[t];if(ty)h+=`<div class="dot" style="background:${ty.color}"></div>`}h+=`</div>`}
         h+=`</div>`;
       }
       h+=`</div></div>`;
@@ -304,41 +328,27 @@ function render(){
   }else if(view==="stats"){
     h+=`<div class="slist">`;
     for(let m=0;m<12;m++){
-      const di=dim(m),tr=monthDays(m),pct=Math.round((tr/di)*100),isCur=now.getMonth()===m;
-      h+=`<div class="sr ${isCur?"cur":""}">
-        <span class="sn">${MN[m]}</span>
-        <div class="sbbg"><div class="sbf" style="width:${pct}%;background:${bg(pct)}"></div></div>
-        <span class="sp ${pc(pct)}">${pct}%</span>
-        <span class="sc">${tr}/${di}</span>
-      </div>`;
+      const di=dim(selYear,m),tr=monthDays(m),pct=Math.round((tr/di)*100),isCur=isCurYear&&now.getMonth()===m;
+      h+=`<div class="sr ${isCur?"cur":""}"><span class="sn">${MN[m]}</span><div class="sbbg"><div class="sbf" style="width:${pct}%;background:${bg(pct)}"></div></div><span class="sp ${pc(pct)}">${pct}%</span><span class="sc">${tr}/${di}</span></div>`;
     }
     h+=`</div>`;
   }else if(view==="types"){
-    const counts={};
-    entries.forEach(e=>{counts[e.type]=(counts[e.type]||0)+1});
+    const ye=yearEntries(),counts={};
+    ye.forEach(e=>{counts[e.type]=(counts[e.type]||0)+1});
     const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    const tot2=uniqueDays();
 
     h+=`<div class="type-stats">`;
-    for(const[k,c]of sorted){
-      const t=TYPES[k];
-      if(!t)continue;
-      h+=`<div class="ts-card"><div class="ts-icon">${t.icon}</div><div class="ts-info"><div class="ts-name">${t.name}</div><div class="ts-val" style="color:${t.color}">${c}</div></div></div>`;
-    }
-    if(sorted.length===0)h+=`<div style="text-align:center;color:#64748b;grid-column:1/-1;padding:40px">Nenhum treino registrado ainda</div>`;
+    for(const[k,c]of sorted){const t=TYPES[k];if(!t)continue;h+=`<div class="ts-card"><div class="ts-icon">${t.icon}</div><div class="ts-info"><div class="ts-name">${t.name}</div><div class="ts-val" style="color:${t.color}">${c}</div></div></div>`}
+    if(sorted.length===0)h+=`<div style="text-align:center;color:#64748b;grid-column:1/-1;padding:40px">Nenhum treino registrado em ${selYear}</div>`;
     h+=`</div>`;
 
-    // Monthly breakdown
     if(sorted.length>0){
       h+=`<div style="margin-top:10px">`;
       for(const[k,c]of sorted){
         const t=TYPES[k];if(!t)continue;
-        const pct=Math.min(100,Math.round((c/tot)*100));
-        h+=`<div class="sr" style="margin-bottom:8px">
-          <span style="font-size:18px;width:30px;text-align:center">${t.icon}</span>
-          <span class="sn">${t.name}</span>
-          <div class="sbbg"><div class="sbf" style="width:${pct}%;background:${t.color}"></div></div>
-          <span class="sp" style="color:${t.color}">${c}x</span>
-        </div>`;
+        const pct=tot2>0?Math.min(100,Math.round((c/tot2)*100)):0;
+        h+=`<div class="sr" style="margin-bottom:8px"><span style="font-size:18px;width:30px;text-align:center">${t.icon}</span><span class="sn">${t.name}</span><div class="sbbg"><div class="sbf" style="width:${pct}%;background:${t.color}"></div></div><span class="sp" style="color:${t.color}">${c}x</span></div>`;
       }
       h+=`</div>`;
     }
